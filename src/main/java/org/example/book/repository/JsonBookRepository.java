@@ -1,11 +1,11 @@
-package org.example.repository.json;
+package org.example.book.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import org.example.model.Book;
-import org.example.repository.BookRepository;
+import org.example.book.Book;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -28,14 +28,13 @@ public class JsonBookRepository implements BookRepository {
     }
 
     @Override
-    public void save(Book book) {
+    public void save(Book book){
         book.setId(getId());
-        this.books.add(book);
+        books.add(book);
     }
 
     @Override
     public Optional<Book> findById(int id) {
-
         return books.stream()
                 .filter(book -> book.getId() == id)
                 .findFirst();
@@ -48,38 +47,29 @@ public class JsonBookRepository implements BookRepository {
 
     @Override
     public List<Book> findByTitle(String title) {
-
         return books.stream()
                 .filter(book -> book.getTitle()
-                        .toLowerCase()
-                        .contains(title.toLowerCase()))
+                        .contains(title))
                 .toList();
     }
 
     @Override
     public List<Book> findByAuthor(String author) {
-
         return books.stream()
                 .filter(book -> book.getAuthor()
-                        .toLowerCase()
-                        .contains(author.toLowerCase()))
+                        .contains(author))
                 .toList();
     }
 
     @Override
     public void update(Book book) {
-        findById(book.getId())
-                .ifPresent(existingBook -> {
-                    existingBook.setTotalCopies(book.getTotalCopies());
-                    existingBook.setAvailableCopies(book.getAvailableCopies());
-                });
     }
 
     @Override
     public void delete(int id) {
         books.removeIf(book -> book.getId() == id);
-
     }
+
 
     @PostConstruct
     public void load(){
@@ -118,4 +108,6 @@ public class JsonBookRepository implements BookRepository {
     private int getId(){
        return ++availableId;
     }
+
+
 }

@@ -1,14 +1,12 @@
 package org.example.ui;
 
-import lombok.AllArgsConstructor;
-import org.example.dto.BookCreateRequest;
-import org.example.dto.BookResponse;
-import org.example.dto.BookUpdateRequest;
-import org.example.service.BookService;
+import org.example.book.dto.BookCreateRequest;
+import org.example.book.dto.BookResponse;
+import org.example.book.dto.BookUpdateRequest;
+import org.example.book.BookService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
