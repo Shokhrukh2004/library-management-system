@@ -7,7 +7,7 @@ import org.example.validation.Validator;
 public class BookValidator {
 
     public static void validateUpdateRequest(BookUpdateRequest request) {
-        Validator.validateNotNull(request, "Update requested");
+        Validator.validateNotNull(request, "Update request");
 
         Validator.validatePositiveInt(request.getId(), "Id");
         Validator.validatePositiveInt(request.getTotalCopies(), "Total Copies");

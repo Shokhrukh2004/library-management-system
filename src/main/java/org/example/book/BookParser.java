@@ -9,8 +9,8 @@ public class BookParser {
     public static Book toBookFromCreateRequest(BookCreateRequest request){
         return new Book(
                 0,
-                request.getTitle(),
-                request.getAuthor(),
+                request.getTitle().trim(),
+                request.getAuthor().trim(),
                 request.getIsbn().trim(),
                 request.getTotalCopies(),
                 request.getTotalCopies()

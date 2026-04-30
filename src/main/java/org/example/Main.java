@@ -2,8 +2,7 @@ package org.example;
 
 
 import org.example.config.AppConfig;
-import org.example.ui.CLInterface;
-import org.springframework.context.ApplicationContext;
+import org.example.ui.LibraryCLI;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class Main {
@@ -12,8 +11,8 @@ public class Main {
         AnnotationConfigApplicationContext context =
                 new AnnotationConfigApplicationContext(AppConfig.class);
 
-        CLInterface ui = context.getBean(CLInterface.class);
-        ui.start();
+        LibraryCLI ui = context.getBean(LibraryCLI.class);
+        ui.run();
 
         context.close();
     }

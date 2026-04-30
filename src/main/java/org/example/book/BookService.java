@@ -22,7 +22,7 @@ public class BookService {
 
     public void save(BookCreateRequest request) {
         BookValidator.validateCreateRequest(request);
-        isbnDuplicateCheck(request.getIsbn());
+        isbnDuplicateCheck(request.getIsbn().trim());
 
         repo.save(BookParser.toBookFromCreateRequest(request));
     }
@@ -90,7 +90,8 @@ public class BookService {
     }
 
     private void isbnDuplicateCheck(String isbn){
-        boolean duplicate = findAll().stream()
+        boolean duplicate = repo.findAll()
+                .stream()
                 .anyMatch(book -> book.getIsbn().equals(isbn));
         if(duplicate){
             throw new ConflictException("Book with ISBN " + isbn + " already exists");
