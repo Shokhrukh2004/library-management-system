@@ -1,8 +1,7 @@
-package org.example.book;
+package org.example.validation;
 
 import org.example.book.dto.BookCreateRequest;
 import org.example.book.dto.BookUpdateRequest;
-import org.example.validation.Validator;
 
 public class BookValidator {
 

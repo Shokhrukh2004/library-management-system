@@ -6,6 +6,7 @@ import org.example.book.dto.BookUpdateRequest;
 import org.example.book.repository.BookRepository;
 import org.example.exception.ConflictException;
 import org.example.exception.NotFoundException;
+import org.example.validation.BookValidator;
 import org.example.validation.Validator;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class BookService {
     public List<BookResponse> findAll(){
         List<Book> books = repo.findAll();
         if(books.isEmpty()){
-            return List.of();
+            throw new NotFoundException("No books found");
         }
 
         return books.stream()
@@ -51,7 +52,7 @@ public class BookService {
         Validator.validateString(title, "Title");
         List<Book>  books = repo.findByTitle(title);
         if(books.isEmpty()){
-            return List.of();
+            throw new NotFoundException("No books found by title " + title);
         }
 
         return books.stream()
@@ -63,7 +64,7 @@ public class BookService {
         Validator.validateString(author, "Author");
         List<Book>  books = repo.findByAuthor(author);
         if(books.isEmpty()){
-            return List.of();
+            throw new NotFoundException("No books found by author " + author);
         }
 
         return books.stream()

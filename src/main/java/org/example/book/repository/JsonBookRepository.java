@@ -108,6 +108,4 @@ public class JsonBookRepository implements BookRepository {
     private int getId(){
        return ++availableId;
     }
-
-
 }

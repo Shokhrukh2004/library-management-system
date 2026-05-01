@@ -7,7 +7,7 @@ import org.example.exception.ValidationException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends Throwable {
 
     public void handle(Exception e) {
         if(e instanceof ValidationException){
