@@ -14,11 +14,13 @@ import static org.example.util.CLIUtil.strToInt;
 @Component
 public class LibraryCLI implements UInterface {
     private final BookCLI bookCLI;
+    private final MemberCLI memberCLI;
     private final GlobalExceptionHandler handler;
 
-    public LibraryCLI(BookCLI bookCLI, GlobalExceptionHandler handler) {
+    public LibraryCLI(BookCLI bookCLI, GlobalExceptionHandler handler,  MemberCLI memberCLI) {
         this.bookCLI = bookCLI;
         this.handler = handler;
+        this.memberCLI = memberCLI;
     }
 
     public void run(){
@@ -46,6 +48,7 @@ public class LibraryCLI implements UInterface {
     private void checkInput(int choice){
         switch (choice){
             case 1: bookCLI.run();break;
+            case 2: memberCLI.run();break;
             default: System.out.println("Please enter a valid choice: this is not valid choice. " + choice);
         }
     }

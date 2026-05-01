@@ -5,15 +5,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
+
 public class Member {
+    @Setter
     private int id;
+    @Setter
     private String name;
+    @Setter
     private String email;
-    private LocalDateTime registerDate;
+    private LocalDate registerDate;
 }

@@ -26,7 +26,4 @@ public class CLIUtil {
         return scan.nextLine().trim();
     }
 
-    public static boolean checkForExit(int choice, int exit){
-        return choice == exit;
-    }
 }

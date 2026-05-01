@@ -15,7 +15,7 @@ public interface MemberRepository {
 
     List<Member> findAll();
 
-    Member findByEmail(String email);
+    Optional<Member> findByEmail(String email);
 
     void update(Member member);
 
