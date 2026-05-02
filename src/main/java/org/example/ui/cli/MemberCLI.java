@@ -1,5 +1,7 @@
 package org.example.ui.cli;
 
+import org.example.exception.LibraryException;
+import org.example.handler.GlobalExceptionHandler;
 import org.example.member.MemberService;
 import org.example.member.dto.MemberCreateRequest;
 import org.example.member.dto.MemberUpdateRequest;
@@ -10,20 +12,32 @@ import org.springframework.stereotype.Component;
 @Component
 public class MemberCLI {
     private final MemberService service;
+    private final GlobalExceptionHandler handler;
 
-    public MemberCLI(MemberService service){
+    public MemberCLI(MemberService service,
+                     GlobalExceptionHandler handler) {
         this.service = service;
+        this.handler = handler;
     }
 
     public void run(){
         boolean isRunning = true;
 
         while(isRunning){
-            printMenu();
-            int input = CLIUtil.strToInt(CLIUtil.getInput("choice"));
-            CLIValidator.validateMenuInput(input, 8);
-            isRunning = !(input==8);
-            checkInput(input);
+            try{
+                printMenu();
+                int input = CLIUtil.getInputInt("choice");
+                CLIValidator.validateMenuInput(input, 8);
+
+                if(input==8){
+                    isRunning = false;
+                }else {
+                    checkInput(input);
+                }
+
+            }catch(LibraryException e){
+                handler.handle(e);
+            }
         }
     }
 
@@ -53,36 +67,36 @@ public class MemberCLI {
 
     private void addMember(){
         service.addMember(new MemberCreateRequest(
-                CLIUtil.getInput("Name"),
-                CLIUtil.getInput("Email")
+                CLIUtil.getInputStr("Name"),
+                CLIUtil.getInputStr("Email")
         ));
     }
 
     private void findById(){
-        int id = CLIUtil.strToInt(CLIUtil.getInput("Id"));
+        int id = CLIUtil.getInputInt("Id");
         System.out.println(service.findById(id).toString());
     }
 
     private void findByName(){
-        String name = CLIUtil.getInput("Name");
+        String name = CLIUtil.getInputStr("Name");
         CLIUtil.listObjects(service.findByName(name));
     }
 
     private void findByEmail(){
-        String email = CLIUtil.getInput("Email");
+        String email = CLIUtil.getInputStr("Email");
         System.out.println(service.findByEmail(email).toString());
     }
 
     private void update(){
         service.update(new MemberUpdateRequest(
-                CLIUtil.strToInt(CLIUtil.getInput("Id")),
-                CLIUtil.getInput("Name"),
-                CLIUtil.getInput("Email")
+                CLIUtil.getInputInt("Id"),
+                CLIUtil.getInputStr("Name"),
+                CLIUtil.getInputStr("Email")
         ));
     }
 
     private void delete(){
-        service.delete(CLIUtil.strToInt(CLIUtil.getInput("Id")));
+        service.delete(CLIUtil.getInputInt("Id"));
     }
 
     private void findAll(){

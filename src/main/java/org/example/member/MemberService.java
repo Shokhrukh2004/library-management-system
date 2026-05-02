@@ -8,11 +8,9 @@ import org.example.member.dto.MemberUpdateRequest;
 import org.example.member.repository.MemberRepository;
 import org.example.validation.MemberValidator;
 import org.example.validation.Validator;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.example.member.MemberParser.toMemberFromCreateRequest;
 import static org.example.member.MemberParser.toResponseFromMember;
@@ -27,7 +25,7 @@ public class MemberService {
 
     public void addMember(MemberCreateRequest member){
         MemberValidator.validateCreateRequest(member);
-        emailDuplicateCheck(member.getEmail());
+        emailDuplicateCheck(member.getEmail(), -1);
 
         repo.save(toMemberFromCreateRequest(member));
     }
@@ -55,7 +53,7 @@ public class MemberService {
     }
 
     public MemberResponse findByEmail(String email){
-        Validator.validateString(email, "Email");
+        MemberValidator.validateEmail(email);
         Member member = repo.findByEmail(email)
                 .orElseThrow(() ->
                         new NotFoundException("Member not found with email: " + email));
@@ -76,7 +74,7 @@ public class MemberService {
 
     public void update(MemberUpdateRequest member){
         MemberValidator.validateUpdateRequest(member);
-        emailDuplicateCheck(member.getEmail());
+        emailDuplicateCheck(member.getEmail(), member.getId());
         Member updateMember = repo.findById(member.getId())
                 .orElseThrow(() ->
                         new NotFoundException("Member not found with id: " + member.getId()));
@@ -84,7 +82,7 @@ public class MemberService {
         updateMember.setName(member.getName());
         updateMember.setEmail(member.getEmail());
 
-        repo.save(updateMember);
+        repo.update(updateMember);
     }
 
     public void delete(int id){
@@ -95,10 +93,11 @@ public class MemberService {
         repo.delete(id);
     }
 
-    private void emailDuplicateCheck(String email){
+    private void emailDuplicateCheck(String email, int excludeId){
         boolean isDuplicate =  repo.findAll()
                 .stream()
-                .anyMatch(member -> member.getEmail().contains(email));
+                .filter(member -> member.getId() != excludeId)
+                .anyMatch(member -> member.getEmail().equals(email));
 
         if(isDuplicate){
             throw new ConflictException("The following email already exists: " + email);

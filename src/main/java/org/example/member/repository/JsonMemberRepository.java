@@ -65,6 +65,7 @@ public class JsonMemberRepository implements MemberRepository {
 
     @Override
     public void update(Member member) {
+
     }
 
     @Override

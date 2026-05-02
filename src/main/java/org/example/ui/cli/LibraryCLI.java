@@ -7,8 +7,7 @@ import org.example.util.CLIUtil.*;
 import org.example.validation.CLIValidator;
 import org.springframework.stereotype.Component;
 
-import static org.example.util.CLIUtil.getInput;
-import static org.example.util.CLIUtil.strToInt;
+import static org.example.util.CLIUtil.*;
 
 
 @Component
@@ -28,7 +27,7 @@ public class LibraryCLI implements UInterface {
         while (isRunning){
             try{
                 printMenu();
-                int choice = strToInt(getInput("choice"));
+                int choice = getInputInt("choice");
                 CLIValidator.validateMenuInput(choice, 3);
                 isRunning = !(choice == 3);
                 checkInput(choice);

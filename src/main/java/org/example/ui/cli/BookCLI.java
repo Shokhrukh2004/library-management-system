@@ -9,7 +9,6 @@ import org.example.util.CLIUtil;
 import org.example.validation.CLIValidator;
 import org.springframework.stereotype.Component;
 
-import static org.example.util.CLIUtil.getInput;
 import static org.example.util.CLIUtil.*;
 
 
@@ -30,10 +29,15 @@ public class BookCLI {
         while (isRunning) {
             try {
                 printMenu();
-                int choice = strToInt(getInput("choice"));
+                int choice = getInputInt("choice");
                 CLIValidator.validateMenuInput(choice, 8);
-                isRunning = !(choice == 8);
-                checkInput(choice);
+
+                if(choice == 8) {
+                    isRunning = false;
+                }else {
+                    checkInput(choice);
+                }
+
             }catch(LibraryException e) {
                 handler.handle(e);
             }
@@ -69,10 +73,10 @@ public class BookCLI {
     private void addBook() {
         service.save(
                 new BookCreateRequest(
-                        getInput( "title"),
-                        getInput("author"),
-                        getInput("ISBN"),
-                        strToInt(getInput("total copies"))
+                        getInputStr( "title"),
+                        getInputStr("author"),
+                        getInputStr("ISBN"),
+                        getInputInt("total copies")
                 )
         );
 
@@ -81,28 +85,28 @@ public class BookCLI {
     private void updateBook(){
         service.update(
                 new BookUpdateRequest(
-                        strToInt(getInput("Id")),
-                        strToInt(getInput("total copies")),
-                        strToInt(getInput("available copies"))
+                        getInputInt("Id"),
+                        getInputInt("total copies"),
+                        getInputInt("available copies")
                 )
         );
     }
 
     private void findById(){
-        int id = strToInt(getInput("Id"));
+        int id = getInputInt("Id");
         System.out.println(service.findById(id).toString());
     }
 
     private void findByTitle(){
         CLIUtil.listObjects(
-                service.findByTitle(getInput("title")
+                service.findByTitle(getInputStr("title")
                 )
         );
     }
 
     private void findByAuthor(){
         CLIUtil.listObjects(
-                service.findByAuthor(getInput("author")
+                service.findByAuthor(getInputStr("author")
                 )
         );
     }
@@ -112,6 +116,6 @@ public class BookCLI {
     }
 
     private void deleteById(){
-        service.delete(strToInt(getInput("Id")));
+        service.delete(getInputInt("Id"));
     }
 }

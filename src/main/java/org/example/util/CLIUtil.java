@@ -1,5 +1,6 @@
 package org.example.util;
 
+
 import org.example.exception.ValidationException;
 
 import java.util.List;
@@ -7,9 +8,9 @@ import java.util.Scanner;
 
 public class CLIUtil {
 
-    private static Scanner scan = new Scanner(System.in);
+    private static final Scanner scan = new Scanner(System.in);
 
-    public static int strToInt(String str){
+    private static int strToInt(String str){
         try{
             return Integer.parseInt(str.trim());
         }catch (NumberFormatException e){
@@ -21,9 +22,13 @@ public class CLIUtil {
         items.forEach(item -> System.out.println(item.toString()));
     }
 
-    public static String getInput(String prompt){
+    public static String getInputStr(String prompt){
         System.out.println("Enter the " + prompt + ":");
         return scan.nextLine().trim();
+    }
+
+    public static int getInputInt(String prompt){
+        return strToInt(getInputStr(prompt));
     }
 
 }
