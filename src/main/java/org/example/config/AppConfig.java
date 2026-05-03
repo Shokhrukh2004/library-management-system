@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.example.book.repository.BookRepository;
 import org.example.book.repository.JsonBookRepository;
+import org.example.loan.repository.JsonLoanRepository;
+import org.example.loan.repository.LoanRepository;
 import org.example.member.repository.JsonMemberRepository;
 import org.example.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +25,9 @@ public class AppConfig {
     @Value("${app.members.file}")
     private String membersFilePath;
 
+    @Value("${app.loans.file}")
+    private String loansFilePath;
+
 
 
     @Bean
@@ -40,5 +45,10 @@ public class AppConfig {
     @Bean
     public MemberRepository memberRepository() {
         return new JsonMemberRepository(objectMapper(), membersFilePath);
+    }
+
+    @Bean
+    public LoanRepository loanRepository() {
+        return new JsonLoanRepository(objectMapper(), loansFilePath);
     }
 }
