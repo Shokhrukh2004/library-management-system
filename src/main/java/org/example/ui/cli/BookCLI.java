@@ -30,9 +30,9 @@ public class BookCLI {
             try {
                 printMenu();
                 int choice = getInputInt("choice");
-                CLIValidator.validateMenuInput(choice, 8);
+                CLIValidator.validateMenuInput(choice, 10);
 
-                if(choice == 8) {
+                if(choice == 10) {
                     isRunning = false;
                 }else {
                     checkInput(choice);
@@ -52,8 +52,10 @@ public class BookCLI {
         System.out.println("4. Find by author");
         System.out.println("5. List all books");
         System.out.println("6. Update book");
-        System.out.println("7. Delete by id");
-        System.out.println("8. Back");
+        System.out.println("7. Deactivate by id");
+        System.out.println("8. Activate by title");
+        System.out.println("9. List all inactive books");
+        System.out.println("10. Back");
     }
 
     private void checkInput(int choice){
@@ -64,7 +66,9 @@ public class BookCLI {
             case 4: findByAuthor(); break;
             case 5: findAll(); break;
             case 6: updateBook(); break;
-            case 7: deleteById(); break;
+            case 7: deactivateById(); break;
+            case 8: activateById(); break;
+            case 9: findAllInactive(); break;
 
             default: System.out.println("Please enter a valid choice: this is not valid choice. " + choice);
         }
@@ -115,7 +119,15 @@ public class BookCLI {
         CLIUtil.listObjects(service.findAll());
     }
 
-    private void deleteById(){
-        service.delete(getInputInt("Id"));
+    private void deactivateById(){
+        service.deactivate(getInputInt("Id"));
+    }
+
+    private void activateById(){
+        service.activate(getInputInt("Id"));
+    }
+
+    private void findAllInactive(){
+        CLIUtil.listObjects(service.findAllInactive());
     }
 }

@@ -33,9 +33,12 @@ public class LibraryCLI implements UInterface {
             try{
                 printMenu();
                 int choice = getInputInt("choice");
-                CLIValidator.validateMenuInput(choice, 3);
-                isRunning = !(choice == 3);
-                checkInput(choice);
+                CLIValidator.validateMenuInput(choice, 4);
+                if(choice == 4){
+                    isRunning = false;
+                }else {
+                    checkInput(choice);
+                }
             }catch (LibraryException e){
                 handler.handle(e);
             }

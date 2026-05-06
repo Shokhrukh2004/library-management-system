@@ -2,6 +2,7 @@ package org.example.validation;
 
 import org.example.book.dto.BookCreateRequest;
 import org.example.book.dto.BookUpdateRequest;
+import org.example.book.repository.BookRepository;
 import org.example.exception.ValidationException;
 
 public class BookValidator {

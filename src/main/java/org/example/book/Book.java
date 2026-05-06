@@ -19,5 +19,7 @@ public class Book {
     private int totalCopies;
     @Setter
     private int availableCopies;
+    @Setter
+    private boolean isActive;
 
 }

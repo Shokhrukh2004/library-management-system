@@ -17,12 +17,20 @@ public class MemberValidator {
         validateEmail(member.getEmail());
     }
 
-    public static void validateEmail(String value){
+    public static void validateEmail(String value) {
         Validator.validateString(value, "Email");
-        if(!value.contains("@") || !value.contains(".")){
-            throw new ValidationException("email should be a valid email address.");
+
+        int atIndex = value.indexOf("@");
+
+        if (atIndex <= 0 || atIndex == value.length() - 1) {
+            throw new ValidationException("Email must have content before and after @.");
+        }
+
+        String domain = value.substring(atIndex + 1);
+
+        if (!domain.contains(".") || domain.startsWith(".") || domain.endsWith(".")) {
+            throw new ValidationException("Email domain must be valid gmail.com");
         }
     }
-
 
 }

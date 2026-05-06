@@ -19,5 +19,9 @@ public interface MemberRepository {
 
     void update(Member member);
 
-    void delete(int id);
+    void deactivate(Member member);
+
+    void activate(Member member);
+
+    List<Member> findInactiveMembers();
 }

@@ -2,6 +2,8 @@ package org.example.member;
 
 import org.example.exception.ConflictException;
 import org.example.exception.NotFoundException;
+import org.example.loan.enums.Status;
+import org.example.loan.repository.LoanRepository;
 import org.example.member.dto.MemberCreateRequest;
 import org.example.member.dto.MemberResponse;
 import org.example.member.dto.MemberUpdateRequest;
@@ -18,9 +20,11 @@ import static org.example.member.MemberParser.toResponseFromMember;
 @Service
 public class MemberService {
     private final MemberRepository repo;
+    private final LoanRepository loanRepo;
 
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, LoanRepository loanRepo) {
         this.repo = memberRepository;
+        this.loanRepo = loanRepo;
     }
 
     public void addMember(MemberCreateRequest member){
@@ -85,12 +89,41 @@ public class MemberService {
         repo.update(updateMember);
     }
 
-    public void delete(int id){
+    public void deactivate(int id){
         Validator.validatePositiveInt(id, "Id");
-        repo.findById(id)
+        Member member = repo.findById(id)
                 .orElseThrow(() -> new
                         NotFoundException("Member not found with id: " + id));
-        repo.delete(id);
+
+        if(!member.isActive()){
+            throw new ConflictException("Member is already deactivated");
+        }
+
+        isMemberLoanedCheck(id);
+        repo.deactivate(member);
+    }
+
+    public void activate(int id){
+        Validator.validatePositiveInt(id, "Id");
+        Member member = repo.findById(id)
+                .orElseThrow(() -> new
+                        NotFoundException("Member not found with id: " + id));
+        if(member.isActive()){
+            throw new ConflictException("Member is already activated");
+        }
+
+        repo.activate(member);
+    }
+
+    public List<MemberResponse> findAllInactive(){
+        List<Member> members = repo.findInactiveMembers();
+        if(members.isEmpty()){
+            throw new NotFoundException("Inactive Members not found");
+        }
+
+        return members.stream()
+                .map(MemberParser::toResponseFromMember)
+                .toList();
     }
 
     private void emailDuplicateCheck(String email, int excludeId){
@@ -101,6 +134,16 @@ public class MemberService {
 
         if(isDuplicate){
             throw new ConflictException("The following email already exists: " + email);
+        }
+    }
+
+    private void isMemberLoanedCheck(int id){
+        boolean isLoaned = loanRepo.findByMemberId(id)
+                .stream()
+                .anyMatch(loan -> loan.getStatus().equals(Status.ACTIVE) ||
+                        loan.getStatus().equals(Status.OVERDUE));
+        if(isLoaned){
+            throw new ConflictException("The member with id "+ id + " has active loan, thus cannot be deleted.");
         }
     }
 }

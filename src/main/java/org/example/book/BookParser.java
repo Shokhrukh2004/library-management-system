@@ -13,7 +13,8 @@ public class BookParser {
                 request.getAuthor().trim(),
                 request.getIsbn().trim(),
                 request.getTotalCopies(),
-                request.getTotalCopies()
+                request.getTotalCopies(),
+                true
         );
     }
 

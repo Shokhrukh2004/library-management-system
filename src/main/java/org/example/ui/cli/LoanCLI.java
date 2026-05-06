@@ -30,14 +30,13 @@ public class LoanCLI {
             try{
                 printMenu();
                 int input = CLIUtil.getInputInt("choice");
-                CLIValidator.validateMenuInput(input, 10);
+                CLIValidator.validateMenuInput(input, 11);
 
-                if(input==10){
+                if(input==11){
                     isRunning = false;
                 }else {
                     checkInput(input);
                 }
-
             }catch(LibraryException e){
                 handler.handle(e);
             }
@@ -54,7 +53,8 @@ public class LoanCLI {
             case 6: findAll(); break;
             case 7: findAllOverdue(); break;
             case 8: findAllActive(); break;
-            case 9: returnLoan(); break;
+            case 9: checkOverdue(); break;
+            case 10: returnLoan(); break;
             default: System.out.println("Please enter a valid choice: this is not valid choice. " + choice);
         }
     }
@@ -69,8 +69,9 @@ public class LoanCLI {
         System.out.println("6. Find all the loans");
         System.out.println("7. Find all loans past return dates");
         System.out.println("8. Find all the loans still active");
-        System.out.println("9. Return a loan");
-        System.out.println("10. Back");
+        System.out.println("9. Check overdue books");
+        System.out.println("10. Return a loan");
+        System.out.println("11. Back");
     }
 
     private void takeLoan(){
@@ -119,6 +120,11 @@ public class LoanCLI {
 
     private void returnLoan(){
         service.returnBook(CLIUtil.getInputInt("Loan id"));
+    }
+
+    private void checkOverdue(){
+        service.checkOverdue()
+                .forEach(loan -> System.out.println(loan.toString()));
     }
 }
 

@@ -14,7 +14,8 @@ public class MemberParser {
                 0,
                 member.getName(),
                 member.getEmail(),
-                LocalDate.now()
+                LocalDate.now(),
+                true
         );
     }
 

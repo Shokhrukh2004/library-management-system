@@ -27,9 +27,9 @@ public class MemberCLI {
             try{
                 printMenu();
                 int input = CLIUtil.getInputInt("choice");
-                CLIValidator.validateMenuInput(input, 8);
+                CLIValidator.validateMenuInput(input, 10);
 
-                if(input==8){
+                if(input==10){
                     isRunning = false;
                 }else {
                     checkInput(input);
@@ -49,7 +49,9 @@ public class MemberCLI {
             case 4: findByEmail(); break;
             case 5: findAll(); break;
             case 6: update(); break;
-            case 7: delete(); break;
+            case 7: deactivateById(); break;
+            case 8: activateById(); break;
+            case 9: listAllInactiveMembers(); break;
         }
     }
 
@@ -61,8 +63,10 @@ public class MemberCLI {
         System.out.println("4. Find by email");
         System.out.println("5. List all members");
         System.out.println("6. Update member");
-        System.out.println("7. Delete by id");
-        System.out.println("8. Back");
+        System.out.println("7. Deactivate by id");
+        System.out.println("8. Activate by id");
+        System.out.println("9. List all inactive members");
+        System.out.println("10. Back");
     }
 
     private void addMember(){
@@ -95,8 +99,16 @@ public class MemberCLI {
         ));
     }
 
-    private void delete(){
-        service.delete(CLIUtil.getInputInt("Id"));
+    private void deactivateById(){
+        service.deactivate(CLIUtil.getInputInt("Id"));
+    }
+
+    private void activateById(){
+        service.activate(CLIUtil.getInputInt("Id"));
+    }
+
+    private void listAllInactiveMembers(){
+        CLIUtil.listObjects(service.findAllInactive());
     }
 
     private void findAll(){

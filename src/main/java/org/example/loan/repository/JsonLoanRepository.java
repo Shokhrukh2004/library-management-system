@@ -99,7 +99,7 @@ public class JsonLoanRepository implements LoanRepository{
             }
 
             List<Loan> loaded = mapper.readValue(
-                    filePath,
+                    file,
                     new TypeReference<List<Loan>>() {
             });
             loans.addAll(loaded);
@@ -108,6 +108,8 @@ public class JsonLoanRepository implements LoanRepository{
                     .mapToInt(Loan::getId)
                     .max()
                     .orElse(0);
+
+            System.out.println("Loan has been loaded.");
 
         }catch (IOException e){
             System.out.println("Loans file could not be loaded: " + e.getMessage());
@@ -119,6 +121,7 @@ public class JsonLoanRepository implements LoanRepository{
         try {
             File file = new File(filePath);
             mapper.writeValue(file, loans);
+            System.out.println("Loan file has been saved.");
         }catch (IOException e){
             System.out.println("Loans file could not be saved: " + e.getMessage());
         }

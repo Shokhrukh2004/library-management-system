@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-
 public class Member {
     @Setter
     private int id;
@@ -19,4 +18,6 @@ public class Member {
     @Setter
     private String email;
     private LocalDate registerDate;
+    @Setter
+    private boolean isActive;
 }

@@ -6,7 +6,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.example.book.Book;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,12 +41,16 @@ public class JsonBookRepository implements BookRepository {
 
     @Override
     public List<Book> findAll() {
-        return new ArrayList<>(books);
+
+        return books.stream()
+                .filter(Book::isActive)
+                .toList();
     }
 
     @Override
     public List<Book> findByTitle(String title) {
         return books.stream()
+                .filter(Book::isActive)
                 .filter(book -> book.getTitle()
                         .contains(title))
                 .toList();
@@ -56,6 +59,7 @@ public class JsonBookRepository implements BookRepository {
     @Override
     public List<Book> findByAuthor(String author) {
         return books.stream()
+                .filter(Book::isActive)
                 .filter(book -> book.getAuthor()
                         .contains(author))
                 .toList();
@@ -66,10 +70,21 @@ public class JsonBookRepository implements BookRepository {
     }
 
     @Override
-    public void delete(int id) {
-        books.removeIf(book -> book.getId() == id);
+    public void activate(Book book){
+        book.setActive(true);
     }
 
+    @Override
+    public void deactivate(Book book) {
+        book.setActive(false);
+    }
+
+    @Override
+    public List<Book> findAllInactive(){
+        return books.stream()
+                .filter(book -> !book.isActive())
+                .toList();
+    }
 
     @PostConstruct
     public void load(){

@@ -9,15 +9,17 @@ import org.example.loan.enums.Status;
 import java.time.LocalDate;
 
 @Getter
-@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class Loan {
-
+    @Setter
     private int id;
-    private final int memberId;
-    private final int bookId;
-    private final LocalDate borrowDate;
-    private final LocalDate dueDate;
+    private int memberId;
+    private int bookId;
+    private LocalDate borrowDate;
+    private LocalDate dueDate;
+    @Setter
     private LocalDate returnDate;
+    @Setter
     private Status status;
 }

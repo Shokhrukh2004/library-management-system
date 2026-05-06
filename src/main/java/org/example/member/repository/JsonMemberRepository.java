@@ -45,6 +45,7 @@ public class JsonMemberRepository implements MemberRepository {
     @Override
     public List<Member> findByName(String name) {
         return members.stream()
+                .filter(Member::isActive)
                 .filter(member -> member
                         .getName()
                         .equals(name))
@@ -53,12 +54,15 @@ public class JsonMemberRepository implements MemberRepository {
 
     @Override
     public List<Member> findAll() {
-        return new ArrayList<>(members);
+        return members.stream()
+                .filter(Member::isActive)
+                .toList();
     }
 
     @Override
     public Optional<Member> findByEmail(String email) {
         return members.stream()
+                .filter(Member::isActive)
                 .filter(member -> member.getEmail().equals(email))
                 .findFirst();
     }
@@ -69,9 +73,22 @@ public class JsonMemberRepository implements MemberRepository {
     }
 
     @Override
-    public void delete(int id) {
-        members.removeIf(member -> member.getId() == id);
+    public void deactivate(Member member) {
+        member.setActive(false);
     }
+
+    @Override
+    public void activate(Member member) {
+        member.setActive(true);
+    }
+
+    @Override
+    public List<Member> findInactiveMembers() {
+        return members.stream()
+                .filter(member -> !member.isActive())
+                .toList();
+    }
+
 
     @PostConstruct
     public void load(){

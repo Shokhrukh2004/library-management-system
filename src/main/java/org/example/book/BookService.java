@@ -6,6 +6,8 @@ import org.example.book.dto.BookUpdateRequest;
 import org.example.book.repository.BookRepository;
 import org.example.exception.ConflictException;
 import org.example.exception.NotFoundException;
+import org.example.loan.enums.Status;
+import org.example.loan.repository.LoanRepository;
 import org.example.validation.BookValidator;
 import org.example.validation.Validator;
 import org.springframework.stereotype.Service;
@@ -16,9 +18,11 @@ import java.util.List;
 public class BookService {
 
     private final BookRepository repo;
+    private final LoanRepository loanRepo;
 
-    public BookService(BookRepository repo) {
+    public BookService(BookRepository repo, LoanRepository loanRepo) {
         this.repo = repo;
+        this.loanRepo = loanRepo;
     }
 
     public void save(BookCreateRequest request) {
@@ -83,12 +87,42 @@ public class BookService {
         repo.update(book1);
     }
 
-    public void delete(int id){
+    public void deactivate(int id){
         Validator.validatePositiveInt(id, "Id");
-        repo.findById(id)
+        Book book = repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found with id " + id));
-        repo.delete(id);
+
+        if(!book.isActive()){
+            throw new ConflictException("Book has been deactivated already");
+        }
+
+        isBookLoanedCheck(id);
+        repo.deactivate(book);
     }
+
+    public void activate(int id){
+        Validator.validatePositiveInt(id, "Id");
+        Book book = repo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Book not found with id " + id));
+
+        if(book.isActive()){
+            throw new ConflictException("Book is already active");
+        }
+
+        repo.activate(book);
+    }
+
+    public List<BookResponse> findAllInactive(){
+        List<Book> books = repo.findAllInactive();
+        if(books.isEmpty()){
+            throw new NotFoundException("No Inactive books found");
+        }
+
+        return  books.stream()
+                .map(BookParser::toBookResponse)
+                .toList();
+    }
+
 
     private void isbnDuplicateCheck(String isbn){
         boolean duplicate = repo.findAll()
@@ -96,6 +130,17 @@ public class BookService {
                 .anyMatch(book -> book.getIsbn().equals(isbn));
         if(duplicate){
             throw new ConflictException("Book with ISBN " + isbn + " already exists");
+        }
+    }
+
+    private void isBookLoanedCheck(int bookId) {
+        boolean isBorrowed = loanRepo.findByBookId(bookId)
+                .stream()
+                .anyMatch(loan -> loan.getStatus().equals(Status.ACTIVE) ||
+                        loan.getStatus().equals(Status.OVERDUE));
+
+        if (isBorrowed) {
+            throw new ConflictException("Book with ID " + bookId + " is loaned and cannot be deactivated!");
         }
     }
 }

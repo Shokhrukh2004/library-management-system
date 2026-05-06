@@ -18,5 +18,9 @@ public interface BookRepository {
 
      void update(Book book);
 
-     void delete(int id);
+     void deactivate(Book book);
+
+     void activate(Book book);
+
+     List<Book> findAllInactive();
 }
