@@ -29,7 +29,7 @@ public class MemberService {
 
     public void addMember(MemberCreateRequest member){
         MemberValidator.validateCreateRequest(member);
-        emailDuplicateCheck(member.getEmail(), -1);
+        emailDuplicateCheck(member.getEmail());
 
         repo.save(toMemberFromCreateRequest(member));
     }
@@ -78,7 +78,7 @@ public class MemberService {
 
     public void update(MemberUpdateRequest member){
         MemberValidator.validateUpdateRequest(member);
-        emailDuplicateCheck(member.getEmail(), member.getId());
+        emailDuplicateCheck(member.getEmail());
         Member updateMember = repo.findById(member.getId())
                 .orElseThrow(() ->
                         new NotFoundException("Member not found with id: " + member.getId()));
@@ -100,7 +100,7 @@ public class MemberService {
         }
 
         isMemberLoanedCheck(id);
-        repo.deactivate(member);
+        repo.deactivate(id);
     }
 
     public void activate(int id){
@@ -112,7 +112,7 @@ public class MemberService {
             throw new ConflictException("Member is already activated");
         }
 
-        repo.activate(member);
+        repo.activate(id);
     }
 
     public List<MemberResponse> findAllInactive(){
@@ -126,14 +126,9 @@ public class MemberService {
                 .toList();
     }
 
-    private void emailDuplicateCheck(String email, int excludeId){
-        boolean isDuplicate =  repo.findAll()
-                .stream()
-                .filter(member -> member.getId() != excludeId)
-                .anyMatch(member -> member.getEmail().equals(email));
-
-        if(isDuplicate){
-            throw new ConflictException("The following email already exists: " + email);
+    private void emailDuplicateCheck(String email){
+        if(repo.findByEmail(email).isPresent()){
+            throw new ConflictException("Email already exists");
         }
     }
 
@@ -143,7 +138,7 @@ public class MemberService {
                 .anyMatch(loan -> loan.getStatus().equals(Status.ACTIVE) ||
                         loan.getStatus().equals(Status.OVERDUE));
         if(isLoaned){
-            throw new ConflictException("The member with id "+ id + " has active loan, thus cannot be deleted.");
+            throw new ConflictException("The member with id "+ id + " has active loan");
         }
     }
 }

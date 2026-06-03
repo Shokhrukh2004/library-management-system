@@ -35,11 +35,6 @@ public class JdbcBookRepository implements BookRepository {
 
             ps.executeUpdate();
 
-            ResultSet keys = ps.getGeneratedKeys();
-            if(keys.next()){
-                book.setId(keys.getInt(1));
-            }
-
         }catch (SQLException e){
             throw new RuntimeException("Failed to save book", e);
         }
@@ -144,17 +139,14 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public void update(Book book) {
-        String sql = "UPDATE books SET total_copies = ?, available_copies = ? WHERE id = ?";
+        String sql = "UPDATE books SET total_copies = ?, available_copies = ? WHERE id = ? AND is_active = true";
         try(Connection conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, book.getTotalCopies());
             ps.setInt(2, book.getAvailableCopies());
             ps.setInt(3, book.getId());
 
-            int rowsAffected = ps.executeUpdate();
-            if(rowsAffected == 0){
-                throw new NotFoundException("Book with id " + book.getId() + " not found");
-            }
+            ps.executeUpdate();
         }catch (SQLException e){
             throw new RuntimeException("Failed to update book", e);
         }

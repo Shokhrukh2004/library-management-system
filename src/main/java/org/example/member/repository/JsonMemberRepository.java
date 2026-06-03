@@ -73,14 +73,15 @@ public class JsonMemberRepository implements MemberRepository {
     }
 
     @Override
-    public void deactivate(Member member) {
-        member.setActive(false);
+    public void deactivate(int id) {
+
     }
 
     @Override
-    public void activate(Member member) {
-        member.setActive(true);
+    public void activate(int id) {
+
     }
+
 
     @Override
     public List<Member> findInactiveMembers() {
