@@ -199,6 +199,30 @@ public class JdbcBookRepository implements BookRepository {
         return books;
     }
 
+    @Override
+    public void increaseAvailableCopies(int id) {
+        String sql = "UPDATE books SET available_copies = available_copies + 1 WHERE id = ?";
+        try(Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update books", e);
+        }
+    }
+
+    @Override
+    public void decreaseAvailableCopies(int id) {
+        String sql = "UPDATE books SET available_copies = available_copies - 1 WHERE id = ?";
+        try(Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update books", e);
+        }
+    }
+
     private Book mapRow(ResultSet rs) throws SQLException {
         return new Book(
                 rs.getInt("id"),

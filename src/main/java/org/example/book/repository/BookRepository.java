@@ -26,4 +26,8 @@ public interface BookRepository {
      void activate(int id);
 
      List<Book> findAllInactive();
+
+     void increaseAvailableCopies(int id);
+
+     void decreaseAvailableCopies(int id);
 }

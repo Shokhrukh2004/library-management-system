@@ -139,7 +139,7 @@ public class LoanService {
         loan.setStatus(Status.RETURNED);
         loan.setReturnDate(LocalDate.now());
         increaseAvailableCopies(book);
-        loanRepo.update(loan);
+        loanRepo.returnLoan(loanId);
     }
 
     public List<LoanResponse> checkOverdue(){
@@ -175,15 +175,5 @@ public class LoanService {
         Member member = getMember(loan.getMemberId());
 
         return LoanParser.toLoanResponseFromLoan(loan, member, book);
-    }
-
-    private void reduceAvailableCopies(Book book){
-        book.setAvailableCopies(book.getAvailableCopies() - 1);
-        bookRepo.update(book);
-    }
-
-    private void increaseAvailableCopies(Book book){
-        book.setAvailableCopies(book.getAvailableCopies() + 1);
-        bookRepo.update(book);
     }
 }
