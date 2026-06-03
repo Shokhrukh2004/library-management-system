@@ -2,6 +2,7 @@ package org.example.book.repository;
 
 import org.example.book.Book;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,11 +17,13 @@ public interface BookRepository {
 
      List<Book> findByAuthor(String author);
 
+     Optional<Book> findByIsbn(String isbn);
+
      void update(Book book);
 
-     void deactivate(Book book);
+     void deactivate(int id);
 
-     void activate(Book book);
+     void activate(int id);
 
      List<Book> findAllInactive();
 }

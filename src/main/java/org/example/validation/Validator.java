@@ -5,7 +5,7 @@ import org.example.exception.ValidationException;
 public class Validator {
 
     public static void validateString(String value, String fieldName){
-        if(value == null || value.isBlank() || value.trim().length() < 3){
+        if(value == null || value.isBlank() || value.length() < 3){
             throw new ValidationException(fieldName + " should have at least 3 characters.");
         }
     }

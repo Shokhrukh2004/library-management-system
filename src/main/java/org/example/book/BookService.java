@@ -13,6 +13,7 @@ import org.example.validation.Validator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookService {
@@ -27,7 +28,7 @@ public class BookService {
 
     public void save(BookCreateRequest request) {
         BookValidator.validateCreateRequest(request);
-        isbnDuplicateCheck(request.getIsbn().trim());
+        isbnDuplicateCheck(request.getIsbn());
 
         repo.save(BookParser.toBookFromCreateRequest(request));
     }
@@ -66,7 +67,7 @@ public class BookService {
 
     public List<BookResponse> findByAuthor(String author){
         Validator.validateString(author, "Author");
-        List<Book>  books = repo.findByAuthor(author);
+        List<Book> books = repo.findByAuthor(author);
         if(books.isEmpty()){
             throw new NotFoundException("No books found by author " + author);
         }
@@ -97,7 +98,7 @@ public class BookService {
         }
 
         isBookLoanedCheck(id);
-        repo.deactivate(book);
+        repo.deactivate(id);
     }
 
     public void activate(int id){
@@ -109,7 +110,7 @@ public class BookService {
             throw new ConflictException("Book is already active");
         }
 
-        repo.activate(book);
+        repo.activate(id);
     }
 
     public List<BookResponse> findAllInactive(){
@@ -125,10 +126,7 @@ public class BookService {
 
 
     private void isbnDuplicateCheck(String isbn){
-        boolean duplicate = repo.findAll()
-                .stream()
-                .anyMatch(book -> book.getIsbn().equals(isbn));
-        if(duplicate){
+        if(repo.findByIsbn(isbn).isPresent()){
             throw new ConflictException("Book with ISBN " + isbn + " already exists");
         }
     }
@@ -140,7 +138,7 @@ public class BookService {
                         loan.getStatus().equals(Status.OVERDUE));
 
         if (isBorrowed) {
-            throw new ConflictException("Book with ID " + bookId + " is loaned and cannot be deactivated!");
+            throw new ConflictException("Book with ID " + bookId + " is loaned");
         }
     }
 }

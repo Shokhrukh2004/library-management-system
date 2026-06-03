@@ -13,5 +13,4 @@ public class BookCreateRequest {
     private String author;
     private String isbn;
     private int totalCopies;
-
 }

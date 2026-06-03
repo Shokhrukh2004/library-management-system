@@ -69,8 +69,6 @@ public class BookCLI {
             case 7: deactivateById(); break;
             case 8: activateById(); break;
             case 9: findAllInactive(); break;
-
-            default: System.out.println("Please enter a valid choice: this is not valid choice. " + choice);
         }
     }
 

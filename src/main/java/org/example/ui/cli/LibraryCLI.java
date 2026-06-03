@@ -58,7 +58,6 @@ public class LibraryCLI implements UInterface {
             case 1: bookCLI.run();break;
             case 2: memberCLI.run();break;
             case 3: loanCLI.run();break;
-            default: System.out.println("Please enter a valid choice: this is not valid choice. " + choice);
         }
     }
 }

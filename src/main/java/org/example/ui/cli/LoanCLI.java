@@ -55,7 +55,6 @@ public class LoanCLI {
             case 8: findAllActive(); break;
             case 9: checkOverdue(); break;
             case 10: returnLoan(); break;
-            default: System.out.println("Please enter a valid choice: this is not valid choice. " + choice);
         }
     }
 
