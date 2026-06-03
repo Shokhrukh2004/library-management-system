@@ -1,7 +1,7 @@
 package org.example.book.repository;
 
 import org.example.book.Book;
-import org.example.exception.NotFoundException;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+@Repository
 public class JdbcBookRepository implements BookRepository {
     private final DataSource dataSource;
 

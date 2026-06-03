@@ -1,11 +1,13 @@
 package org.example.loan.repository;
 
 import org.example.loan.Loan;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class JdbcLoanRepository implements LoanRepository {
     private final DataSource dataSource;
 
