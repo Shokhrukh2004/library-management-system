@@ -141,7 +141,7 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public void update(Book book) {
-        String sql = "UPDATE books SET total_copies = ?, available_copies = ? WHERE id = ? AND is_active = true";
+        String sql = "UPDATE books SET total_copies = ?, available_copies = ? WHERE id = ?";
         try(Connection conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, book.getTotalCopies());

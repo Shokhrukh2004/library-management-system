@@ -82,6 +82,8 @@ public class BookService {
         Book book1 = repo.findById(book.getId())
                 .orElseThrow(() -> new NotFoundException("Book not found with id " + book.getId()));
 
+        isBookActiveCheck(book1);
+
         book1.setTotalCopies(book.getTotalCopies());
         book1.setAvailableCopies(book.getAvailableCopies());
 
@@ -93,9 +95,7 @@ public class BookService {
         Book book = repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found with id " + id));
 
-        if(!book.isActive()){
-            throw new ConflictException("Book has been deactivated already");
-        }
+        isBookActiveCheck(book);
 
         isBookLoanedCheck(id);
         repo.deactivate(id);
@@ -139,6 +139,12 @@ public class BookService {
 
         if (isBorrowed) {
             throw new ConflictException("Book with ID " + bookId + " is loaned");
+        }
+    }
+
+    private void isBookActiveCheck(Book book) {
+        if(!book.isActive()){
+            throw new ConflictException("Book is not active");
         }
     }
 }

@@ -98,7 +98,7 @@ public class JdbcLoanRepository implements LoanRepository {
 
     @Override
     public Optional<Loan> findActiveByMemberAndBook(int memberId, int bookId) {
-        String sql = "SELECT * FROM loans WHERE member_id = ? AND book_id = ? AND status = ACTIVE";
+        String sql = "SELECT * FROM loans WHERE member_id = ? AND book_id = ? AND status = 'ACTIVE'";
         try(Connection conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, memberId);
@@ -136,7 +136,7 @@ public class JdbcLoanRepository implements LoanRepository {
     @Override
     public List<Loan> findOverdue() {
         List <Loan> loans = new ArrayList<>();
-        String sql = "SELECT * FROM loans WHERE status = OVERDUE";
+        String sql = "SELECT * FROM loans WHERE status = 'OVERDUE'";
         try(Connection conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()){
@@ -154,7 +154,7 @@ public class JdbcLoanRepository implements LoanRepository {
     @Override
     public List<Loan> findActive() {
         List<Loan> loans = new ArrayList<>();
-        String sql = "SELECT * FROM loans WHERE status = ACTIVE";
+        String sql = "SELECT * FROM loans WHERE status = 'ACTIVE'";
         try(Connection conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()){
@@ -172,7 +172,7 @@ public class JdbcLoanRepository implements LoanRepository {
     @Override
     public List<Loan> findReturned(){
         List<Loan> loans = new ArrayList<>();
-        String sql = "SELECT * FROM loans WHERE status = RETURNED";
+        String sql = "SELECT * FROM loans WHERE status = 'RETURNED'";
         try(Connection conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()){
@@ -187,10 +187,9 @@ public class JdbcLoanRepository implements LoanRepository {
         return loans;
     }
 
-
     @Override
     public void returnLoan(int loanId) {
-        String sql = "UPDATE loans SET status = RETURNED AND return_date = ? WHERE id = ?";
+        String sql = "UPDATE loans SET status = 'RETURNED', return_date = ? WHERE id = ?";
         try(Connection conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setDate(1, Date.valueOf(LocalDate.now()));
@@ -209,8 +208,15 @@ public class JdbcLoanRepository implements LoanRepository {
         loan.setMemberId(rs.getInt("member_id"));
         loan.setBookId(rs.getInt("book_id"));
         loan.setBorrowDate(rs.getDate("borrow_date").toLocalDate());
-        loan.setDueDate(rs.getDate("due_date").toLocalDate());
-        loan.setStatus(Status.valueOf(rs.getString("status")));
+
+        LocalDate dueDate = rs.getDate("due_date").toLocalDate();
+        loan.setDueDate(dueDate);
+
+        Status status = Status.valueOf(rs.getString("status"));
+        if(status == Status.ACTIVE && dueDate.isBefore(LocalDate.now())){
+            status = Status.OVERDUE;
+        }
+        loan.setStatus(status);
 
         Date returnDate = rs.getDate("return_date");
         loan.setReturnDate(returnDate != null ? returnDate.toLocalDate() : null);

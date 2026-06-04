@@ -14,8 +14,6 @@ public class LoanResponse {
     private final int loanId;
     private final int memberId;
     private final int bookId;
-    private final String memberName;
-    private final String bookName;
     private final LocalDate borrowDate;
     private final LocalDate dueDate;
     private final LocalDate returnDate;

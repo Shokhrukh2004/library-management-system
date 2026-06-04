@@ -27,6 +27,4 @@ public class Validator {
             throw new ValidationException(fieldName + " should be > 0 and <=  " + end);
         }
     }
-
-
 }

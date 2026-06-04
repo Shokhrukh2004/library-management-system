@@ -33,14 +33,9 @@ public class AppConfig {
     @Bean
     public DataSource dataSource() {
         PGSimpleDataSource ds = new PGSimpleDataSource();
-        System.out.println("Connecting to " + url);
-        System.out.println("user: "+ username);
-        System.out.println("password: "+ password);
         ds.setUrl(url);
         ds.setUser(username);
         ds.setPassword(password);
         return ds;
     }
-
-
 }

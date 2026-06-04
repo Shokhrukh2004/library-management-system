@@ -5,16 +5,12 @@ import org.example.book.repository.BookRepository;
 import org.example.exception.NotFoundException;
 import org.example.loan.dto.LoanCreateRequest;
 import org.example.loan.dto.LoanResponse;
-import org.example.loan.enums.Status;
 import org.example.loan.repository.LoanRepository;
 import org.example.member.Member;
 import org.example.member.repository.MemberRepository;
-import org.example.validation.LoanValidator;
 import org.example.validation.Validator;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -37,22 +33,24 @@ public class LoanService {
     }
 
     public void save(LoanCreateRequest loanRequest) {
-        LoanValidator.validateLoanCreateRequest(loanRequest);
+        Validator.validatePositiveInt(loanRequest.getMemberId(), "memberId");
+        Validator.validatePositiveInt(loanRequest.getBookId(), "bookId");
+
+
         Book book = getBook(loanRequest.getBookId());
-        getMember(loanRequest.getMemberId());
+        Member member = getMember(loanRequest.getMemberId());
 
-        loanLogic.checkHasOverDue(loanRequest.getMemberId());
-        loanLogic.checkHasBorrowedSameBook(loanRequest.getMemberId(), loanRequest.getBookId());
-        loanLogic.checkBookAvailability(book);
+        loanLogic.checkCreateRequest(member, book);
+        bookRepo.decreaseAvailableCopies(book.getId());
 
-        reduceAvailableCopies(book);
         loanRepo.save(LoanParser.toLoanFromCreateRequest(loanRequest));
     }
 
     public LoanResponse findById(int id){
         Validator.validatePositiveInt(id, "Loan ID");
+        Loan loan = loanRepo.findById(id).orElseThrow(() -> new NotFoundException("Book not found with id " + id));
 
-        return getJoinedTable(getLoan(id));
+        return LoanParser.toLoanResponseFromLoan(loan);
     }
 
     public List<LoanResponse> findByMemberId(int memberId){
@@ -64,7 +62,7 @@ public class LoanService {
 
         return loans
                 .stream()
-                .map(this::getJoinedTable)
+                .map(LoanParser::toLoanResponseFromLoan)
                 .toList();
     }
 
@@ -78,7 +76,7 @@ public class LoanService {
 
         return loans
                 .stream()
-                .map(this::getJoinedTable)
+                .map(LoanParser::toLoanResponseFromLoan)
                 .toList();
     }
 
@@ -90,7 +88,7 @@ public class LoanService {
                 .orElseThrow(() ->
                         new NotFoundException("Loan not found with member id " + memberId + " and book id " + bookId));
 
-        return getJoinedTable(loan);
+        return LoanParser.toLoanResponseFromLoan(loan);
     }
 
     public List<LoanResponse> findAll(){
@@ -101,7 +99,7 @@ public class LoanService {
 
         return loans
                 .stream()
-                .map(this::getJoinedTable)
+                .map(LoanParser::toLoanResponseFromLoan)
                 .toList();
     }
 
@@ -113,7 +111,7 @@ public class LoanService {
 
         return loans
                 .stream()
-                .map(this::getJoinedTable)
+                .map(LoanParser::toLoanResponseFromLoan)
                 .toList();
     }
 
@@ -125,7 +123,18 @@ public class LoanService {
 
         return loans
                 .stream()
-                .map(this::getJoinedTable)
+                .map(LoanParser::toLoanResponseFromLoan)
+                .toList();
+    }
+
+    public List<LoanResponse> findReturned(){
+        List<Loan> loans = loanRepo.findReturned();
+        if(loans.isEmpty()){
+            throw new NotFoundException("Returned Loans Not Found");
+        }
+
+        return loans.stream()
+                .map(LoanParser::toLoanResponseFromLoan)
                 .toList();
     }
 
@@ -133,26 +142,12 @@ public class LoanService {
         Validator.validatePositiveInt(loanId, "Loan ID");
 
         Loan loan = getLoan(loanId);
-        Book book = getBook(loan.getBookId());
         loanLogic.checkReturned(loan);
 
-        loan.setStatus(Status.RETURNED);
-        loan.setReturnDate(LocalDate.now());
-        increaseAvailableCopies(book);
+        bookRepo.increaseAvailableCopies(loan.getBookId());
         loanRepo.returnLoan(loanId);
     }
 
-    public List<LoanResponse> checkOverdue(){
-        loanRepo.findActive()
-                .stream()
-                .filter(loan -> loan.getDueDate().isBefore(LocalDate.now()))
-                .forEach(loan -> {
-                    loan.setStatus(Status.OVERDUE);
-                    loanRepo.update(loan);
-                });
-
-        return findOverdue();
-    }
 
     private Book getBook(int bookId){
         return bookRepo.findById(bookId).orElseThrow(() ->
@@ -168,12 +163,5 @@ public class LoanService {
         return loanRepo.findById(loanId).orElseThrow(
                 () -> new NotFoundException("Loan not found with id: " + loanId)
         );
-    }
-
-    private LoanResponse getJoinedTable(Loan loan){
-        Book book = getBook(loan.getBookId());
-        Member member = getMember(loan.getMemberId());
-
-        return LoanParser.toLoanResponseFromLoan(loan, member, book);
     }
 }

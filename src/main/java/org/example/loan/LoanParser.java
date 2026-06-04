@@ -22,13 +22,11 @@ public class LoanParser {
         );
     }
 
-    public static LoanResponse toLoanResponseFromLoan(Loan loan, Member member, Book book){
+    public static LoanResponse toLoanResponseFromLoan(Loan loan){
         return new LoanResponse(
                 loan.getId(),
-                member.getId(),
-                book.getId(),
-                member.getName(),
-                book.getTitle(),
+                loan.getMemberId(),
+                loan.getBookId(),
                 loan.getBorrowDate(),
                 loan.getDueDate(),
                 loan.getReturnDate(),

@@ -53,7 +53,7 @@ public class LoanCLI {
             case 6: findAll(); break;
             case 7: findAllOverdue(); break;
             case 8: findAllActive(); break;
-            case 9: checkOverdue(); break;
+            case 9: findAllReturned(); break;
             case 10: returnLoan(); break;
         }
     }
@@ -68,7 +68,7 @@ public class LoanCLI {
         System.out.println("6. Find all the loans");
         System.out.println("7. Find all loans past return dates");
         System.out.println("8. Find all the loans still active");
-        System.out.println("9. Check overdue books");
+        System.out.println("9. Find all the loans returned");
         System.out.println("10. Return a loan");
         System.out.println("11. Back");
     }
@@ -117,14 +117,15 @@ public class LoanCLI {
                 .forEach(loan -> System.out.println(loan.toString()));
     }
 
+    private void findAllReturned(){
+        service.findReturned()
+                .forEach(loan -> System.out.println(loan.toString()));
+    }
+
     private void returnLoan(){
         service.returnBook(CLIUtil.getInputInt("Loan id"));
     }
 
-    private void checkOverdue(){
-        service.checkOverdue()
-                .forEach(loan -> System.out.println(loan.toString()));
-    }
 }
 
 
