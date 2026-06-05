@@ -1,5 +1,7 @@
 package org.example.config;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.example.book.repository.BookRepository;
 import org.example.book.repository.JdbcBookRepository;
 import org.example.loan.repository.JdbcLoanRepository;
@@ -29,13 +31,41 @@ public class AppConfig {
     @Value("${db.password}")
     private String password;
 
+    @Value("${hikari.max.pool.size}")
+    private int poolSize;
+
+    @Value("${hikari.min.idle}")
+    private int minIdle;
+
+    @Value("${hikari.connection.timeout}")
+    private int connTimeout;
+
+    @Value("${hikari.idle.timeout}")
+    private int idleTimeout;
+
+    @Value("${hikari.max.lifetime}")
+    private int maxLifetime;
+
 
     @Bean
     public DataSource dataSource() {
-        PGSimpleDataSource ds = new PGSimpleDataSource();
-        ds.setUrl(url);
-        ds.setUser(username);
-        ds.setPassword(password);
-        return ds;
+        HikariConfig config = new HikariConfig();
+
+        config.setJdbcUrl(url);
+        config.setUsername(username);
+        config.setPassword(password);
+
+        config.setMaximumPoolSize(poolSize);
+        config.setMinimumIdle(minIdle);
+
+        config.setConnectionTimeout(connTimeout);
+        config.setIdleTimeout(idleTimeout);
+        config.setMaxLifetime(maxLifetime);
+
+        config.setConnectionTestQuery("SELECT 1");
+
+        config.setPoolName("LibraryPool");
+
+        return new HikariDataSource(config);
     }
 }
