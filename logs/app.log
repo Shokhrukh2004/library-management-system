@@ -1,0 +1,62 @@
+12:18:03 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Starting...
+12:18:03 INFO  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Added connection org.postgresql.jdbc.PgConnection@3b2c0e88
+12:18:03 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Start completed.
+12:18:40 INFO  org.example.book.BookService - Adding new book - isbn: asdasd2w
+12:18:40 INFO  org.example.book.BookService - Added new book successfully - isbn: asdasd2w
+12:19:25 INFO  org.example.member.MemberService - Adding new member - email: steve@mail.ru
+12:19:25 INFO  org.example.member.MemberService - Member successfully added - email: steve@mail.ru
+12:20:23 INFO  org.example.loan.LoanService - Creating loan - memberId: 2, bookId: 2
+12:20:23 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 2, memberId: 2
+12:20:52 INFO  org.example.loan.LoanService - Creating loan - memberId: 12, bookId: 2
+12:21:13 INFO  org.example.book.BookService - deactivating book - id: 2
+12:21:13 WARN  org.example.book.BookService - Book is already loaned - id: 2
+12:21:55 WARN  com.zaxxer.hikari.pool.PoolBase - LibraryPool - Failed to validate connection org.postgresql.jdbc.PgConnection@3b2c0e88 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+12:21:55 WARN  com.zaxxer.hikari.pool.PoolBase - LibraryPool - Failed to validate connection org.postgresql.jdbc.PgConnection@83298d7 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+12:21:55 WARN  com.zaxxer.hikari.pool.PoolBase - LibraryPool - Failed to validate connection org.postgresql.jdbc.PgConnection@42a9e5d1 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+12:21:55 WARN  com.zaxxer.hikari.pool.PoolBase - LibraryPool - Failed to validate connection org.postgresql.jdbc.PgConnection@5b080f3a (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+12:21:55 WARN  com.zaxxer.hikari.pool.PoolBase - LibraryPool - Failed to validate connection org.postgresql.jdbc.PgConnection@773cbf4f (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+12:22:25 ERROR o.e.l.repository.JdbcLoanRepository - Database Error Occurred: 
+java.sql.SQLTransientConnectionException: LibraryPool - Connection is not available, request timed out after 30005ms (total=0, active=0, idle=0, waiting=0)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:686)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:179)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:144)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:99)
+	at org.example.loan.repository.JdbcLoanRepository.findAll(JdbcLoanRepository.java:131)
+	at org.example.loan.LoanService.findAll(LoanService.java:101)
+	at org.example.ui.cli.LoanCLI.findAll(LoanCLI.java:106)
+	at org.example.ui.cli.LoanCLI.checkInput(LoanCLI.java:53)
+	at org.example.ui.cli.LoanCLI.run(LoanCLI.java:38)
+	at org.example.ui.cli.LibraryCLI.checkInput(LibraryCLI.java:60)
+	at org.example.ui.cli.LibraryCLI.run(LibraryCLI.java:40)
+	at org.example.Main.main(Main.java:20)
+Caused by: org.postgresql.util.PSQLException: Connection to localhost:5433 refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:346)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:54)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:273)
+	at org.postgresql.Driver.makeConnection(Driver.java:446)
+	at org.postgresql.Driver.connect(Driver.java:298)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:137)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:360)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:202)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:461)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:724)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:703)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.net.ConnectException: Connection refused
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:554)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:243)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:98)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:136)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:262)
+	... 14 common frames omitted
+12:25:07 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Starting...
+12:25:07 INFO  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Added connection org.postgresql.jdbc.PgConnection@4409e975
+12:25:07 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Start completed.

@@ -1,7 +1,10 @@
 package org.example.book.repository;
 
+
 import org.example.book.Book;
 import org.example.exception.DatabaseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -16,6 +19,7 @@ import java.util.Optional;
 
 @Repository
 public class JdbcBookRepository implements BookRepository {
+    private final static Logger log = LoggerFactory.getLogger(JdbcBookRepository.class);
     private final DataSource dataSource;
 
     public JdbcBookRepository(DataSource dataSource) {
@@ -39,6 +43,7 @@ public class JdbcBookRepository implements BookRepository {
             ps.executeUpdate();
 
         }catch (SQLException e){
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to save book", e);
         }
     }
@@ -57,6 +62,7 @@ public class JdbcBookRepository implements BookRepository {
                 return Optional.of(mapRow(rs));
             }
         }catch (SQLException e){
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to find book", e);
         }
 
@@ -77,6 +83,7 @@ public class JdbcBookRepository implements BookRepository {
                 books.add(mapRow(rs));
             }
         }catch (SQLException e){
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to find books", e);
         }
 
@@ -98,6 +105,7 @@ public class JdbcBookRepository implements BookRepository {
             }
 
         }catch (SQLException e){
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to find books by title", e);
         }
 
@@ -117,6 +125,7 @@ public class JdbcBookRepository implements BookRepository {
                 books.add(mapRow(rs));
             }
         }catch (SQLException e){
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to find books by author", e);
         }
 
@@ -134,6 +143,7 @@ public class JdbcBookRepository implements BookRepository {
                 return Optional.of(mapRow(rs));
             }
         }catch (SQLException e){
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to find books by isbn", e);
         }
 
@@ -151,6 +161,7 @@ public class JdbcBookRepository implements BookRepository {
 
             ps.executeUpdate();
         }catch (SQLException e){
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to update book", e);
         }
     }
@@ -165,6 +176,7 @@ public class JdbcBookRepository implements BookRepository {
             ps.executeUpdate();
 
         }catch (SQLException e){
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to deactivate book", e);
         }
     }
@@ -179,6 +191,7 @@ public class JdbcBookRepository implements BookRepository {
            ps.executeUpdate();
 
         }catch (SQLException e){
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to activate book", e);
         }
     }
@@ -195,6 +208,7 @@ public class JdbcBookRepository implements BookRepository {
                 books.add(mapRow(rs));
             }
         }catch (SQLException e){
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to find books", e);
         }
         return books;
@@ -208,6 +222,7 @@ public class JdbcBookRepository implements BookRepository {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to update books", e);
         }
     }
@@ -220,6 +235,7 @@ public class JdbcBookRepository implements BookRepository {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to update books", e);
         }
     }

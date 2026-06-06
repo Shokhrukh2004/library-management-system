@@ -2,6 +2,8 @@ package org.example.member.repository;
 
 import org.example.exception.DatabaseException;
 import org.example.member.Member;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -12,6 +14,7 @@ import java.util.Optional;
 
 @Repository
 public class JdbcMemberRepository implements MemberRepository {
+    private final static Logger log = LoggerFactory.getLogger(JdbcMemberRepository.class);
     private final DataSource dataSource;
 
     public JdbcMemberRepository(DataSource dataSource) {
@@ -30,6 +33,7 @@ public class JdbcMemberRepository implements MemberRepository {
 
             ps.executeUpdate();
         }catch (SQLException e){
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not save member", e);
         }
     }
@@ -46,6 +50,7 @@ public class JdbcMemberRepository implements MemberRepository {
                 return Optional.of(mapRow(rs));
             }
         }catch (SQLException e){
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not find member", e);
         }
 
@@ -66,6 +71,7 @@ public class JdbcMemberRepository implements MemberRepository {
             }
 
         } catch (SQLException e) {
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not find members", e);
         }
 
@@ -85,6 +91,7 @@ public class JdbcMemberRepository implements MemberRepository {
                 members.add(mapRow(rs));
             }
         }catch (SQLException e){
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not find members", e);
         }
 
@@ -103,6 +110,7 @@ public class JdbcMemberRepository implements MemberRepository {
                 return Optional.of(mapRow(rs));
             }
         }catch (SQLException e){
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not find members", e);
         }
 
@@ -120,6 +128,7 @@ public class JdbcMemberRepository implements MemberRepository {
 
             ps.executeUpdate();
         } catch (SQLException e) {
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not update member", e);
         }
 
@@ -133,6 +142,7 @@ public class JdbcMemberRepository implements MemberRepository {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not deactivate member", e);
         }
     }
@@ -145,6 +155,7 @@ public class JdbcMemberRepository implements MemberRepository {
             ps.setInt(1, id);
             ps.executeUpdate();
         }catch (SQLException e) {
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not activate member", e);
         }
     }
@@ -162,6 +173,7 @@ public class JdbcMemberRepository implements MemberRepository {
             }
 
         } catch (SQLException e) {
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not find members", e);
         }
 

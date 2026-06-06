@@ -3,6 +3,8 @@ package org.example.loan.repository;
 import org.example.exception.DatabaseException;
 import org.example.loan.Loan;
 import org.example.loan.enums.Status;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -14,6 +16,7 @@ import java.util.Optional;
 
 @Repository
 public class JdbcLoanRepository implements LoanRepository {
+    private final static Logger log = LoggerFactory.getLogger(JdbcLoanRepository.class);
     private final DataSource dataSource;
 
     public JdbcLoanRepository(DataSource dataSource) {
@@ -34,6 +37,7 @@ public class JdbcLoanRepository implements LoanRepository {
 
             ps.executeUpdate();
         }catch (SQLException e){
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("insert loan failed", e);
         }
     }
@@ -52,6 +56,7 @@ public class JdbcLoanRepository implements LoanRepository {
             }
 
         } catch (SQLException e) {
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("find loan by id failed", e);
         }
 
@@ -71,6 +76,7 @@ public class JdbcLoanRepository implements LoanRepository {
                 loans.add(mapRow(rs));
             }
         } catch (SQLException e) {
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("find loan by member id failed", e);
         }
 
@@ -91,6 +97,7 @@ public class JdbcLoanRepository implements LoanRepository {
                 loans.add(mapRow(rs));
             }
         }catch (SQLException e) {
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("find loan by book id failed", e);
         }
 
@@ -110,6 +117,7 @@ public class JdbcLoanRepository implements LoanRepository {
                 return Optional.of(mapRow(rs));
             }
         } catch (SQLException e) {
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("find loan by member and loan book id failed", e);
         }
 
@@ -128,6 +136,7 @@ public class JdbcLoanRepository implements LoanRepository {
                 loans.add(mapRow(rs));
             }
         } catch (SQLException e) {
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("find all loans failed", e);
         }
 
@@ -146,6 +155,7 @@ public class JdbcLoanRepository implements LoanRepository {
                 loans.add(mapRow(rs));
             }
         } catch (SQLException e) {
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("find all loans failed", e);
         }
 
@@ -164,6 +174,7 @@ public class JdbcLoanRepository implements LoanRepository {
                 loans.add(mapRow(rs));
             }
         } catch (SQLException e) {
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("find all active loans failed", e);
         }
 
@@ -182,6 +193,7 @@ public class JdbcLoanRepository implements LoanRepository {
                 loans.add(mapRow(rs));
             }
         } catch (SQLException e) {
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("find all returned loans failed", e);
         }
 
@@ -198,6 +210,7 @@ public class JdbcLoanRepository implements LoanRepository {
 
             ps.executeUpdate();
         }catch (SQLException e){
+            log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("update loan failed", e);
         }
     }
