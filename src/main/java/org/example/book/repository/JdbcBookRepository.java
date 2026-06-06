@@ -5,6 +5,7 @@ import org.example.book.Book;
 import org.example.exception.DatabaseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -29,9 +30,8 @@ public class JdbcBookRepository implements BookRepository {
     @Override
     public void save(Book book) {
         String sql = "INSERT INTO books (title, author, isbn, total_copies, available_copies, is_active) VALUES (?, ?, ?, ?, ?, ?)";
-
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)){
 
             ps.setString(1, book.getTitle());
             ps.setString(2, book.getAuthor());
@@ -45,15 +45,16 @@ public class JdbcBookRepository implements BookRepository {
         }catch (SQLException e){
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to save book", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
     }
 
     @Override
     public Optional<Book> findById(int id) {
         String sql = "SELECT * FROM books WHERE id = ?";
-
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, id);
 
             ResultSet rs = ps.executeQuery();
@@ -64,6 +65,8 @@ public class JdbcBookRepository implements BookRepository {
         }catch (SQLException e){
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to find book", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return Optional.empty();
@@ -73,9 +76,8 @@ public class JdbcBookRepository implements BookRepository {
     public List<Book> findAll() {
         String sql = "SELECT * FROM books WHERE is_active = true";
         List<Book> books = new ArrayList<>();
-
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()){
 
 
@@ -85,6 +87,8 @@ public class JdbcBookRepository implements BookRepository {
         }catch (SQLException e){
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to find books", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return books;
@@ -94,9 +98,8 @@ public class JdbcBookRepository implements BookRepository {
     public List<Book> findByTitle(String title) {
         List<Book> books = new ArrayList<>();
         String sql = "SELECT * FROM books WHERE title ILIKE ? AND is_active = true";
-
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setString(1, "%" + title + "%");
 
             ResultSet rs = ps.executeQuery();
@@ -107,6 +110,8 @@ public class JdbcBookRepository implements BookRepository {
         }catch (SQLException e){
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to find books by title", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return books;
@@ -116,8 +121,8 @@ public class JdbcBookRepository implements BookRepository {
     public List<Book> findByAuthor(String author) {
         List<Book> books = new ArrayList<>();
         String sql = "SELECT * FROM books WHERE author ILIKE ? AND is_active = true";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setString(1, "%" + author + "%");
 
             ResultSet rs = ps.executeQuery();
@@ -127,6 +132,8 @@ public class JdbcBookRepository implements BookRepository {
         }catch (SQLException e){
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to find books by author", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return books;
@@ -135,8 +142,8 @@ public class JdbcBookRepository implements BookRepository {
     @Override
     public Optional<Book> findByIsbn(String isbn) {
         String sql = "SELECT * FROM books WHERE isbn = ?";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setString(1, isbn);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
@@ -145,6 +152,8 @@ public class JdbcBookRepository implements BookRepository {
         }catch (SQLException e){
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to find books by isbn", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return Optional.empty();
@@ -153,8 +162,8 @@ public class JdbcBookRepository implements BookRepository {
     @Override
     public void update(Book book) {
         String sql = "UPDATE books SET total_copies = ?, available_copies = ? WHERE id = ?";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, book.getTotalCopies());
             ps.setInt(2, book.getAvailableCopies());
             ps.setInt(3, book.getId());
@@ -163,14 +172,16 @@ public class JdbcBookRepository implements BookRepository {
         }catch (SQLException e){
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to update book", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
     }
 
     @Override
     public void deactivate(int id) {
         String sql = "UPDATE books SET is_active = false WHERE id = ?";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, id);
 
             ps.executeUpdate();
@@ -178,14 +189,16 @@ public class JdbcBookRepository implements BookRepository {
         }catch (SQLException e){
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to deactivate book", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
     }
 
     @Override
     public void activate(int id) {
         String sql = "UPDATE books SET is_active = true WHERE id = ?";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, id);
 
            ps.executeUpdate();
@@ -193,15 +206,17 @@ public class JdbcBookRepository implements BookRepository {
         }catch (SQLException e){
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to activate book", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
     }
 
     @Override
     public List<Book> findAllInactive() {
         String sql = "SELECT * FROM books WHERE is_active = false";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         List<Book> books = new ArrayList<>();
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
+        try(PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()){
 
             while(rs.next()){
@@ -210,33 +225,40 @@ public class JdbcBookRepository implements BookRepository {
         }catch (SQLException e){
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to find books", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
+
         return books;
     }
 
     @Override
     public void increaseAvailableCopies(int id) {
         String sql = "UPDATE books SET available_copies = available_copies + 1 WHERE id = ?";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to update books", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
     }
 
     @Override
     public void decreaseAvailableCopies(int id) {
         String sql = "UPDATE books SET available_copies = available_copies - 1 WHERE id = ?";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Failed to update books", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
     }
 

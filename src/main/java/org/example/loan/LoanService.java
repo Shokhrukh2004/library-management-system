@@ -12,6 +12,7 @@ import org.example.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class LoanService {
         this.loanLogic = loanLogic;
     }
 
+    @Transactional
     public void save(LoanCreateRequest loanRequest) {
         log.info("Creating loan - memberId: {}, bookId: {}", loanRequest.getMemberId(), loanRequest.getBookId());
         Validator.validatePositiveInt(loanRequest.getMemberId(), "memberId");
@@ -144,6 +146,7 @@ public class LoanService {
                 .toList();
     }
 
+    @Transactional
     public void returnBook(int loanId){
         log.info("Returning loan - loanId: {}", loanId);
         Validator.validatePositiveInt(loanId, "Loan ID");
@@ -152,6 +155,7 @@ public class LoanService {
         loanLogic.checkReturned(loan);
 
         bookRepo.increaseAvailableCopies(loan.getBookId());
+
         loanRepo.returnLoan(loanId);
         log.info("Returned loan successfully - loanId: {}", loanId);
     }

@@ -2,24 +2,22 @@ package org.example.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.example.book.repository.BookRepository;
-import org.example.book.repository.JdbcBookRepository;
-import org.example.loan.repository.JdbcLoanRepository;
-import org.example.loan.repository.LoanRepository;
-import org.example.member.repository.JdbcMemberRepository;
-import org.example.member.repository.MemberRepository;
-import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import javax.sql.DataSource;
 
 @Configuration
 @ComponentScan("org.example")
 @PropertySource("classpath:application.properties")
+@EnableTransactionManagement
 public class AppConfig {
 
     @Value("${db.url}")
@@ -67,5 +65,10 @@ public class AppConfig {
         config.setPoolName("LibraryPool");
 
         return new HikariDataSource(config);
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(DataSource dataSource){
+        return new DataSourceTransactionManager(dataSource);
     }
 }

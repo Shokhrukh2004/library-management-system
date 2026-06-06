@@ -60,3 +60,58 @@ Caused by: java.net.ConnectException: Connection refused
 12:25:07 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Starting...
 12:25:07 INFO  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Added connection org.postgresql.jdbc.PgConnection@4409e975
 12:25:07 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Start completed.
+12:27:59 INFO  org.example.loan.LoanService - Returning loan - loanId: 2
+12:27:59 INFO  org.example.loan.LoanService - Returned loan successfully - loanId: 2
+12:28:34 INFO  org.example.book.BookService - Adding new book - isbn: asdsad22
+12:29:14 INFO  org.example.book.BookService - Adding new book - isbn: asdasdww22
+12:29:14 INFO  org.example.book.BookService - Added new book successfully - isbn: asdasdww22
+12:29:28 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 3
+12:29:29 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 3, memberId: 1
+12:29:39 INFO  org.example.loan.LoanService - Creating loan - memberId: 2, bookId: 3
+12:29:39 WARN  org.example.loan.LoanBusinessLogic - Book has no available copies - bookId: 3
+12:29:57 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 3
+12:29:57 WARN  org.example.loan.LoanBusinessLogic - Book has no available copies - bookId: 3
+12:30:15 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+12:30:15 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
+12:30:27 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+12:30:27 WARN  org.example.loan.LoanBusinessLogic - Member has already borrowed same book - memberId: 1, bookId: 1
+12:55:42 WARN  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Thread starvation or clock leap detected (housekeeper delta=2m4s138ms).
+13:01:12 WARN  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Thread starvation or clock leap detected (housekeeper delta=5m804ms).
+13:11:04 WARN  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Thread starvation or clock leap detected (housekeeper delta=9m51s259ms).
+14:33:54 WARN  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Thread starvation or clock leap detected (housekeeper delta=15m49s296ms).
+15:37:15 WARN  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Thread starvation or clock leap detected (housekeeper delta=3m20s3ms).
+16:00:10 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Starting...
+16:00:10 INFO  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Added connection org.postgresql.jdbc.PgConnection@74e47444
+16:00:10 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Start completed.
+16:02:14 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Starting...
+16:02:14 INFO  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Added connection org.postgresql.jdbc.PgConnection@4ae33a11
+16:02:14 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Start completed.
+16:02:33 INFO  org.example.loan.LoanService - Returning loan - loanId: 5
+16:02:58 INFO  org.example.loan.LoanService - Returning loan - loanId: 3
+16:02:58 INFO  org.example.loan.LoanService - Returned loan successfully - loanId: 3
+16:06:03 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Starting...
+16:06:03 INFO  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Added connection org.postgresql.jdbc.PgConnection@24fb6a80
+16:06:03 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Start completed.
+16:06:32 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 3
+16:06:59 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Starting...
+16:06:59 INFO  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Added connection org.postgresql.jdbc.PgConnection@24fb6a80
+16:06:59 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Start completed.
+16:29:34 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Starting...
+16:29:34 INFO  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Added connection org.postgresql.jdbc.PgConnection@4ae33a11
+16:29:34 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Start completed.
+16:31:34 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Starting...
+16:31:34 INFO  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Added connection org.postgresql.jdbc.PgConnection@3f28bd56
+16:31:34 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Start completed.
+16:32:10 INFO  org.example.loan.LoanService - Returning loan - loanId: 3
+16:32:15 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Starting...
+16:32:15 INFO  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Added connection org.postgresql.jdbc.PgConnection@4ae33a11
+16:32:15 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Start completed.
+16:33:20 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Starting...
+16:33:20 INFO  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Added connection org.postgresql.jdbc.PgConnection@4ae33a11
+16:33:20 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Start completed.
+16:33:41 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 3
+16:33:47 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Starting...
+16:33:47 INFO  com.zaxxer.hikari.pool.HikariPool - LibraryPool - Added connection org.postgresql.jdbc.PgConnection@24fb6a80
+16:33:47 INFO  com.zaxxer.hikari.HikariDataSource - LibraryPool - Start completed.
+16:34:48 INFO  org.example.loan.LoanService - Returning loan - loanId: 4
+16:34:48 INFO  org.example.loan.LoanService - Returned loan successfully - loanId: 4

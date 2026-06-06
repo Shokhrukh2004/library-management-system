@@ -5,6 +5,7 @@ import org.example.loan.Loan;
 import org.example.loan.enums.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -27,8 +28,8 @@ public class JdbcLoanRepository implements LoanRepository {
     @Override
     public void save(Loan loan) {
         String sql = "INSERT INTO loans (member_id, book_id, borrow_date, due_date, status) VALUES (?, ?, ?, ?, ?)";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, loan.getMemberId());
             ps.setInt(2, loan.getBookId());
             ps.setDate(3, Date.valueOf(loan.getBorrowDate()));
@@ -39,14 +40,16 @@ public class JdbcLoanRepository implements LoanRepository {
         }catch (SQLException e){
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("insert loan failed", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
     }
 
     @Override
     public Optional<Loan> findById(int id) {
         String sql = "SELECT * FROM loans WHERE id = ?";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, id);
 
             ResultSet rs = ps.executeQuery();
@@ -58,6 +61,8 @@ public class JdbcLoanRepository implements LoanRepository {
         } catch (SQLException e) {
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("find loan by id failed", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return Optional.empty();
@@ -67,9 +72,9 @@ public class JdbcLoanRepository implements LoanRepository {
     public List<Loan> findByMemberId(int memberId) {
         List<Loan> loans = new ArrayList<>();
         String sql = "SELECT * FROM loans WHERE member_id = ?";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
 
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, memberId);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
@@ -78,6 +83,8 @@ public class JdbcLoanRepository implements LoanRepository {
         } catch (SQLException e) {
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("find loan by member id failed", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return loans;
@@ -87,8 +94,9 @@ public class JdbcLoanRepository implements LoanRepository {
     public List<Loan> findByBookId(int bookId) {
         List<Loan> loans = new ArrayList<>();
         String sql = "SELECT * FROM loans WHERE book_id = ?";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, bookId);
 
             ResultSet rs = ps.executeQuery();
@@ -99,6 +107,8 @@ public class JdbcLoanRepository implements LoanRepository {
         }catch (SQLException e) {
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("find loan by book id failed", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return loans;
@@ -107,8 +117,8 @@ public class JdbcLoanRepository implements LoanRepository {
     @Override
     public Optional<Loan> findActiveByMemberAndBook(int memberId, int bookId) {
         String sql = "SELECT * FROM loans WHERE member_id = ? AND book_id = ? AND status = 'ACTIVE'";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, memberId);
             ps.setInt(2, bookId);
 
@@ -119,6 +129,8 @@ public class JdbcLoanRepository implements LoanRepository {
         } catch (SQLException e) {
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("find loan by member and loan book id failed", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return Optional.empty();
@@ -128,8 +140,8 @@ public class JdbcLoanRepository implements LoanRepository {
     public List<Loan> findAll() {
         List<Loan> loans = new ArrayList<>();
         String sql = "SELECT * FROM loans";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()){
 
             while(rs.next()){
@@ -138,6 +150,8 @@ public class JdbcLoanRepository implements LoanRepository {
         } catch (SQLException e) {
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("find all loans failed", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return loans;
@@ -147,8 +161,8 @@ public class JdbcLoanRepository implements LoanRepository {
     public List<Loan> findOverdue() {
         List <Loan> loans = new ArrayList<>();
         String sql = "SELECT * FROM loans WHERE status = 'OVERDUE'";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()){
 
             while(rs.next()){
@@ -157,6 +171,8 @@ public class JdbcLoanRepository implements LoanRepository {
         } catch (SQLException e) {
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("find all loans failed", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return loans;
@@ -166,8 +182,8 @@ public class JdbcLoanRepository implements LoanRepository {
     public List<Loan> findActive() {
         List<Loan> loans = new ArrayList<>();
         String sql = "SELECT * FROM loans WHERE status = 'ACTIVE'";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()){
 
             while(rs.next()){
@@ -176,6 +192,8 @@ public class JdbcLoanRepository implements LoanRepository {
         } catch (SQLException e) {
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("find all active loans failed", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return loans;
@@ -185,8 +203,8 @@ public class JdbcLoanRepository implements LoanRepository {
     public List<Loan> findReturned(){
         List<Loan> loans = new ArrayList<>();
         String sql = "SELECT * FROM loans WHERE status = 'RETURNED'";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()){
 
             while(rs.next()){
@@ -195,6 +213,8 @@ public class JdbcLoanRepository implements LoanRepository {
         } catch (SQLException e) {
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("find all returned loans failed", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return loans;
@@ -203,8 +223,8 @@ public class JdbcLoanRepository implements LoanRepository {
     @Override
     public void returnLoan(int loanId) {
         String sql = "UPDATE loans SET status = 'RETURNED', return_date = ? WHERE id = ?";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setDate(1, Date.valueOf(LocalDate.now()));
             ps.setInt(2, loanId);
 
@@ -212,6 +232,8 @@ public class JdbcLoanRepository implements LoanRepository {
         }catch (SQLException e){
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("update loan failed", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
     }
 

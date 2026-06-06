@@ -4,6 +4,7 @@ import org.example.exception.DatabaseException;
 import org.example.member.Member;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -24,8 +25,8 @@ public class JdbcMemberRepository implements MemberRepository {
     @Override
     public void save(Member member) {
         String sql = "INSERT INTO members (name, email, register_date, is_active) VALUES(?, ?, ?, ?) ";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setString(1, member.getName());
             ps.setString(2, member.getEmail());
             ps.setDate(3, Date.valueOf(member.getRegisterDate()));
@@ -35,14 +36,16 @@ public class JdbcMemberRepository implements MemberRepository {
         }catch (SQLException e){
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not save member", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
     }
 
     @Override
     public Optional<Member> findById(int id) {
         String sql = "SELECT * FROM members where id = ?";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, id);
 
             ResultSet rs = ps.executeQuery();
@@ -52,6 +55,8 @@ public class JdbcMemberRepository implements MemberRepository {
         }catch (SQLException e){
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not find member", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return Optional.empty();
@@ -61,8 +66,8 @@ public class JdbcMemberRepository implements MemberRepository {
     public List<Member> findByName(String name) {
         List<Member> members = new ArrayList<>();
         String sql = "SELECT * FROM members WHERE name ILIKE ? AND is_active = true";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setString(1, "%" + name + "%");
 
             ResultSet rs = ps.executeQuery();
@@ -73,6 +78,8 @@ public class JdbcMemberRepository implements MemberRepository {
         } catch (SQLException e) {
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not find members", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return members;
@@ -82,9 +89,8 @@ public class JdbcMemberRepository implements MemberRepository {
     public List<Member> findAll() {
         List<Member> members = new ArrayList<>();
         String sql = "SELECT * FROM members WHERE is_active = true";
-
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()){
 
             while(rs.next()){
@@ -93,6 +99,8 @@ public class JdbcMemberRepository implements MemberRepository {
         }catch (SQLException e){
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not find members", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return members;
@@ -101,8 +109,8 @@ public class JdbcMemberRepository implements MemberRepository {
     @Override
     public Optional<Member> findByEmail(String email) {
         String sql = "SELECT * FROM members WHERE email ILIKE ? AND is_active = true";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setString(1, "%" + email + "%");
             ResultSet rs = ps.executeQuery();
 
@@ -112,6 +120,8 @@ public class JdbcMemberRepository implements MemberRepository {
         }catch (SQLException e){
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not find members", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return Optional.empty();
@@ -120,8 +130,8 @@ public class JdbcMemberRepository implements MemberRepository {
     @Override
     public void update(Member member) {
         String sql = "UPDATE members SET name = ?, email = ?, WHERE id = ? AND is_active = true";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setString(1, member.getName());
             ps.setString(2, member.getEmail());
             ps.setInt(3, member.getId());
@@ -130,33 +140,38 @@ public class JdbcMemberRepository implements MemberRepository {
         } catch (SQLException e) {
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not update member", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
-
     }
 
     @Override
     public void deactivate(int id) {
         String sql = "UPDATE members SET is_active = false WHERE id = ?";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not deactivate member", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
     }
 
     @Override
     public void activate(int id) {
         String sql = "UPDATE members SET is_active = true WHERE id = ?";
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, id);
             ps.executeUpdate();
         }catch (SQLException e) {
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not activate member", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
     }
 
@@ -164,8 +179,8 @@ public class JdbcMemberRepository implements MemberRepository {
     public List<Member> findInactiveMembers() {
         String sql = "SELECT * FROM members WHERE is_active = false";
         List<Member> members = new ArrayList<>();
-        try(Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try(PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()){
 
             while(rs.next()){
@@ -175,6 +190,8 @@ public class JdbcMemberRepository implements MemberRepository {
         } catch (SQLException e) {
             log.error("Database Error Occurred: ",  e);
             throw new DatabaseException("Could not find members", e);
+        }finally {
+            DataSourceUtils.releaseConnection(conn, dataSource);
         }
 
         return members;
