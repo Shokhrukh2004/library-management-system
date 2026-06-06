@@ -9,6 +9,8 @@ import org.example.loan.repository.LoanRepository;
 import org.example.member.Member;
 import org.example.member.repository.MemberRepository;
 import org.example.validation.Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,8 @@ import java.util.List;
 
 @Service
 public class LoanService {
+
+    private final static Logger log = LoggerFactory.getLogger(LoanService.class);
 
     private final BookRepository bookRepo;
     private final MemberRepository memberRepo;
@@ -33,6 +37,7 @@ public class LoanService {
     }
 
     public void save(LoanCreateRequest loanRequest) {
+        log.info("Creating loan - memberId: {}, bookId: {}", loanRequest.getMemberId(), loanRequest.getBookId());
         Validator.validatePositiveInt(loanRequest.getMemberId(), "memberId");
         Validator.validatePositiveInt(loanRequest.getBookId(), "bookId");
 
@@ -44,6 +49,7 @@ public class LoanService {
         bookRepo.decreaseAvailableCopies(book.getId());
 
         loanRepo.save(LoanParser.toLoanFromCreateRequest(loanRequest));
+        log.info("Loan created successfully - bookId: {}, memberId: {}", loanRequest.getBookId(), loanRequest.getMemberId());
     }
 
     public LoanResponse findById(int id){
@@ -139,6 +145,7 @@ public class LoanService {
     }
 
     public void returnBook(int loanId){
+        log.info("Returning loan - loanId: {}", loanId);
         Validator.validatePositiveInt(loanId, "Loan ID");
 
         Loan loan = getLoan(loanId);
@@ -146,6 +153,7 @@ public class LoanService {
 
         bookRepo.increaseAvailableCopies(loan.getBookId());
         loanRepo.returnLoan(loanId);
+        log.info("Returned loan successfully - loanId: {}", loanId);
     }
 
 

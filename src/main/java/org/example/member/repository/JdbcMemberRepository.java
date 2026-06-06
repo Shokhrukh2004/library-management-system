@@ -1,5 +1,6 @@
 package org.example.member.repository;
 
+import org.example.exception.DatabaseException;
 import org.example.member.Member;
 import org.springframework.stereotype.Repository;
 
@@ -29,7 +30,7 @@ public class JdbcMemberRepository implements MemberRepository {
 
             ps.executeUpdate();
         }catch (SQLException e){
-            throw new RuntimeException("Could not save member", e);
+            throw new DatabaseException("Could not save member", e);
         }
     }
 
@@ -45,7 +46,7 @@ public class JdbcMemberRepository implements MemberRepository {
                 return Optional.of(mapRow(rs));
             }
         }catch (SQLException e){
-            throw new RuntimeException("Could not find member", e);
+            throw new DatabaseException("Could not find member", e);
         }
 
         return Optional.empty();
@@ -65,7 +66,7 @@ public class JdbcMemberRepository implements MemberRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Could not find members", e);
+            throw new DatabaseException("Could not find members", e);
         }
 
         return members;
@@ -84,7 +85,7 @@ public class JdbcMemberRepository implements MemberRepository {
                 members.add(mapRow(rs));
             }
         }catch (SQLException e){
-            throw new RuntimeException("Could not find members", e);
+            throw new DatabaseException("Could not find members", e);
         }
 
         return members;
@@ -102,7 +103,7 @@ public class JdbcMemberRepository implements MemberRepository {
                 return Optional.of(mapRow(rs));
             }
         }catch (SQLException e){
-            throw new RuntimeException("Could not find members", e);
+            throw new DatabaseException("Could not find members", e);
         }
 
         return Optional.empty();
@@ -119,7 +120,7 @@ public class JdbcMemberRepository implements MemberRepository {
 
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Could not update member", e);
+            throw new DatabaseException("Could not update member", e);
         }
 
     }
@@ -132,7 +133,7 @@ public class JdbcMemberRepository implements MemberRepository {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Could not deactivate member", e);
+            throw new DatabaseException("Could not deactivate member", e);
         }
     }
 
@@ -144,7 +145,7 @@ public class JdbcMemberRepository implements MemberRepository {
             ps.setInt(1, id);
             ps.executeUpdate();
         }catch (SQLException e) {
-            throw new RuntimeException("Could not activate member", e);
+            throw new DatabaseException("Could not activate member", e);
         }
     }
 
@@ -161,7 +162,7 @@ public class JdbcMemberRepository implements MemberRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Could not find members", e);
+            throw new DatabaseException("Could not find members", e);
         }
 
         return members;

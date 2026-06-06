@@ -1,6 +1,7 @@
 package org.example.book.repository;
 
 import org.example.book.Book;
+import org.example.exception.DatabaseException;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -38,7 +39,7 @@ public class JdbcBookRepository implements BookRepository {
             ps.executeUpdate();
 
         }catch (SQLException e){
-            throw new RuntimeException("Failed to save book", e);
+            throw new DatabaseException("Failed to save book", e);
         }
     }
 
@@ -56,7 +57,7 @@ public class JdbcBookRepository implements BookRepository {
                 return Optional.of(mapRow(rs));
             }
         }catch (SQLException e){
-            throw new RuntimeException("Failed to find book", e);
+            throw new DatabaseException("Failed to find book", e);
         }
 
         return Optional.empty();
@@ -76,7 +77,7 @@ public class JdbcBookRepository implements BookRepository {
                 books.add(mapRow(rs));
             }
         }catch (SQLException e){
-            throw new RuntimeException("Failed to find books", e);
+            throw new DatabaseException("Failed to find books", e);
         }
 
         return books;
@@ -97,7 +98,7 @@ public class JdbcBookRepository implements BookRepository {
             }
 
         }catch (SQLException e){
-            throw new RuntimeException("Failed to find books by title", e);
+            throw new DatabaseException("Failed to find books by title", e);
         }
 
         return books;
@@ -116,7 +117,7 @@ public class JdbcBookRepository implements BookRepository {
                 books.add(mapRow(rs));
             }
         }catch (SQLException e){
-            throw new RuntimeException("Failed to find books by author", e);
+            throw new DatabaseException("Failed to find books by author", e);
         }
 
         return books;
@@ -133,7 +134,7 @@ public class JdbcBookRepository implements BookRepository {
                 return Optional.of(mapRow(rs));
             }
         }catch (SQLException e){
-            throw new RuntimeException("Failed to find books by isbn", e);
+            throw new DatabaseException("Failed to find books by isbn", e);
         }
 
         return Optional.empty();
@@ -150,7 +151,7 @@ public class JdbcBookRepository implements BookRepository {
 
             ps.executeUpdate();
         }catch (SQLException e){
-            throw new RuntimeException("Failed to update book", e);
+            throw new DatabaseException("Failed to update book", e);
         }
     }
 
@@ -164,7 +165,7 @@ public class JdbcBookRepository implements BookRepository {
             ps.executeUpdate();
 
         }catch (SQLException e){
-            throw new RuntimeException("Failed to deactivate book", e);
+            throw new DatabaseException("Failed to deactivate book", e);
         }
     }
 
@@ -178,7 +179,7 @@ public class JdbcBookRepository implements BookRepository {
            ps.executeUpdate();
 
         }catch (SQLException e){
-            throw new  RuntimeException("Failed to activate book", e);
+            throw new DatabaseException("Failed to activate book", e);
         }
     }
 
@@ -194,7 +195,7 @@ public class JdbcBookRepository implements BookRepository {
                 books.add(mapRow(rs));
             }
         }catch (SQLException e){
-            throw new RuntimeException("Failed to find books", e);
+            throw new DatabaseException("Failed to find books", e);
         }
         return books;
     }
@@ -207,7 +208,7 @@ public class JdbcBookRepository implements BookRepository {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to update books", e);
+            throw new DatabaseException("Failed to update books", e);
         }
     }
 
@@ -219,7 +220,7 @@ public class JdbcBookRepository implements BookRepository {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to update books", e);
+            throw new DatabaseException("Failed to update books", e);
         }
     }
 

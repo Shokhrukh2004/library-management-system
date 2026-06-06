@@ -1,9 +1,6 @@
 package org.example.handler;
 
-import org.example.exception.ConflictException;
-import org.example.exception.LibraryException;
-import org.example.exception.NotFoundException;
-import org.example.exception.ValidationException;
+import org.example.exception.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,6 +15,9 @@ public class GlobalExceptionHandler extends Throwable {
         }
         else if(e instanceof ConflictException){
             System.out.println("Conflict Error: " + e.getMessage());
+        }
+        else if(e instanceof DatabaseException){
+            System.out.println("Database Error: " + e.getMessage());
         }
         else if(e instanceof LibraryException){
             System.out.println("Library Error: " + e.getMessage());

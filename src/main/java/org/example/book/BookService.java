@@ -10,6 +10,8 @@ import org.example.loan.enums.Status;
 import org.example.loan.repository.LoanRepository;
 import org.example.validation.BookValidator;
 import org.example.validation.Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.Optional;
 
 @Service
 public class BookService {
+
+    private static final Logger log = LoggerFactory.getLogger(BookService.class);
 
     private final BookRepository repo;
     private final LoanRepository loanRepo;
@@ -27,16 +31,19 @@ public class BookService {
     }
 
     public void save(BookCreateRequest request) {
+        log.info("Adding new book - isbn: {}", request.getIsbn());
         BookValidator.validateCreateRequest(request);
         isbnDuplicateCheck(request.getIsbn());
 
         repo.save(BookParser.toBookFromCreateRequest(request));
+        log.info("Added new book successfully - isbn: {}", request.getIsbn());
     }
 
     public BookResponse findById(int id){
         Validator.validatePositiveInt(id, "Id");
         Book book = repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found with id " + id));
+
 
         return BookParser.toBookResponse(book);
     }
@@ -78,39 +85,40 @@ public class BookService {
     }
 
     public void update(BookUpdateRequest book){
+        log.info("updating book - id: {}", book.getId());
         BookValidator.validateUpdateRequest(book);
-        Book book1 = repo.findById(book.getId())
-                .orElseThrow(() -> new NotFoundException("Book not found with id " + book.getId()));
 
+        Book book1 = getBookIfExist(book.getId());
         isBookActiveCheck(book1);
 
         book1.setTotalCopies(book.getTotalCopies());
         book1.setAvailableCopies(book.getAvailableCopies());
 
         repo.update(book1);
+        log.info("updated book successfully - id: {}", book.getId());
     }
 
     public void deactivate(int id){
+        log.info("deactivating book - id: {}", id);
         Validator.validatePositiveInt(id, "Id");
-        Book book = repo.findById(id)
-                .orElseThrow(() -> new NotFoundException("Book not found with id " + id));
 
+        Book book = getBookIfExist(id);
         isBookActiveCheck(book);
-
         isBookLoanedCheck(id);
+
         repo.deactivate(id);
+        log.info("deactivated book successfully - id: {}", id);
     }
 
     public void activate(int id){
+        log.info("activating book - id: {}", id);
         Validator.validatePositiveInt(id, "Id");
-        Book book = repo.findById(id)
-                .orElseThrow(() -> new NotFoundException("Book not found with id " + id));
 
-        if(book.isActive()){
-            throw new ConflictException("Book is already active");
-        }
+        Book book = getBookIfExist(id);
+        isBookNotActiveCheck(book);
 
         repo.activate(id);
+        log.info("activated book successfully - id: {}", id);
     }
 
     public List<BookResponse> findAllInactive(){
@@ -127,6 +135,7 @@ public class BookService {
 
     private void isbnDuplicateCheck(String isbn){
         if(repo.findByIsbn(isbn).isPresent()){
+            log.warn("Book with ISBN {} already exists", isbn);
             throw new ConflictException("Book with ISBN " + isbn + " already exists");
         }
     }
@@ -138,13 +147,27 @@ public class BookService {
                         loan.getStatus().equals(Status.OVERDUE));
 
         if (isBorrowed) {
+            log.warn("Book is already loaned - id: {}", bookId);
             throw new ConflictException("Book with ID " + bookId + " is loaned");
         }
     }
 
     private void isBookActiveCheck(Book book) {
         if(!book.isActive()){
+            log.warn("Book is not active - id: {}", book.getId());
             throw new ConflictException("Book is not active");
         }
+    }
+
+    private void isBookNotActiveCheck(Book book){
+        if(book.isActive()){
+            log.warn("Book is active already - id: {}", book.getId());
+            throw new ConflictException("Book is active already");
+        }
+    }
+
+    private Book getBookIfExist(int id){
+        return repo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Book with id " + id + " not found"));
     }
 }
