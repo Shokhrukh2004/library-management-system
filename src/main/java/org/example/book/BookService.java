@@ -168,6 +168,9 @@ public class BookService {
 
     private Book getBookIfExist(int id){
         return repo.findById(id)
-                .orElseThrow(() -> new NotFoundException("Book with id " + id + " not found"));
+                .orElseThrow(() -> {
+                    log.warn("Book not found - id: {}", id);
+                    return new NotFoundException("Book with id " + id + " not found");
+                });
     }
 }

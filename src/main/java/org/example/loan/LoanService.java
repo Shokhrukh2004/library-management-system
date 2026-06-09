@@ -162,18 +162,25 @@ public class LoanService {
 
 
     private Book getBook(int bookId){
-        return bookRepo.findById(bookId).orElseThrow(() ->
-                new NotFoundException("Book not found with id: " + bookId));
+        return bookRepo.findById(bookId).orElseThrow(() -> {
+            log.warn("Book not found with id {}", bookId);
+            return new NotFoundException("Book not found with id: " + bookId);
+        });
+
     }
 
     private Member getMember(int memberId){
-        return memberRepo.findById(memberId).orElseThrow(() ->
-                new NotFoundException("Member not found with id: "+ memberId));
+        return memberRepo.findById(memberId).orElseThrow(() ->{
+            log.warn("Member not found with id: {}", memberId);
+            return new NotFoundException("Member not found with id: " + memberId);
+        });
+
     }
 
     private Loan getLoan(int loanId){
-        return loanRepo.findById(loanId).orElseThrow(
-                () -> new NotFoundException("Loan not found with id: " + loanId)
-        );
+        return loanRepo.findById(loanId).orElseThrow(() -> {
+            log.warn("Loan not found with loanId: {}", loanId);
+            return new NotFoundException("Loan not found with loanId: " + loanId);
+        });
     }
 }

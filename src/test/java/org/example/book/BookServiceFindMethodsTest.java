@@ -15,7 +15,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-public class BookServiceRetrieveMethodsTest {
+public class BookServiceFindMethodsTest {
 
     @Mock
     BookRepository bookRepo;

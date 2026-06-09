@@ -111,7 +111,6 @@ public class MemberService {
 
         Member member = getMemberIfExist(id);
         isMemberNotActiveCheck(member);
-        isMemberLoanedCheck(id);
 
         repo.activate(id);
         log.info("Member activated successfully - memberId: {}", id);
@@ -163,6 +162,9 @@ public class MemberService {
 
     private Member getMemberIfExist(int id){
         return repo.findById(id)
-                .orElseThrow(() -> new NotFoundException("Member not found with id: {}" + id));
+                .orElseThrow(() -> {
+                    log.warn("Member not found - memberId: {}", id);
+                    return new NotFoundException("Member not found");
+                });
     }
 }
