@@ -58,3 +58,27 @@
 16:44:28 WARN  org.example.member.MemberService - Member not found - memberId: 1
 16:45:45 INFO  org.example.member.MemberService - Deactivating member - memberId: -1
 16:46:11 INFO  org.example.member.MemberService - Deactivating member - memberId: -1
+17:45:37 WARN  org.example.loan.LoanBusinessLogic - Member has already borrowed same book - memberId: 1, bookId: 1
+17:47:25 WARN  org.example.loan.LoanBusinessLogic - Book has no available copies - bookId: 1
+17:50:12 WARN  org.example.loan.LoanBusinessLogic - Member is not active - memberId: 1
+17:51:31 WARN  org.example.loan.LoanBusinessLogic - Book is not active - bookId: 1
+17:54:02 WARN  org.example.loan.LoanBusinessLogic - Member has overdue already - memberId: 1
+17:58:04 WARN  org.example.loan.LoanBusinessLogic - Loan has already been returned - loanId: 1
+18:24:10 WARN  org.example.loan.LoanBusinessLogic - Member is not active - memberId: 1
+18:24:10 WARN  org.example.loan.LoanBusinessLogic - Member has already borrowed same book - memberId: 1, bookId: 1
+18:24:10 WARN  org.example.loan.LoanBusinessLogic - Loan has already been returned - loanId: 1
+18:24:10 WARN  org.example.loan.LoanBusinessLogic - Book has no available copies - bookId: 1
+18:24:10 WARN  org.example.loan.LoanBusinessLogic - Member has overdue already - memberId: 1
+18:24:10 WARN  org.example.loan.LoanBusinessLogic - Book has no available copies - bookId: 1
+18:34:17 WARN  org.example.loan.LoanBusinessLogic - Member is not active - memberId: 1
+18:34:17 WARN  org.example.loan.LoanBusinessLogic - Member has already borrowed same book - memberId: 1, bookId: 1
+18:34:17 WARN  org.example.loan.LoanBusinessLogic - Loan has already been returned - loanId: 1
+18:34:17 WARN  org.example.loan.LoanBusinessLogic - Book has no available copies - bookId: 1
+18:34:17 WARN  org.example.loan.LoanBusinessLogic - Member has overdue already - memberId: 1
+18:34:17 WARN  org.example.loan.LoanBusinessLogic - Book is not active - bookId: 1
+18:36:15 WARN  org.example.loan.LoanBusinessLogic - Member is not active - memberId: 1
+18:36:15 WARN  org.example.loan.LoanBusinessLogic - Member has already borrowed same book - memberId: 1, bookId: 1
+18:36:15 WARN  org.example.loan.LoanBusinessLogic - Loan has already been returned - loanId: 1
+18:36:15 WARN  org.example.loan.LoanBusinessLogic - Book has no available copies - bookId: 1
+18:36:15 WARN  org.example.loan.LoanBusinessLogic - Member has overdue already - memberId: 1
+18:36:15 WARN  org.example.loan.LoanBusinessLogic - Book is not active - bookId: 1
