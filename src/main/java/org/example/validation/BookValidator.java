@@ -29,5 +29,4 @@ public class BookValidator {
             throw new ValidationException("Total Copies can't be less than Available Copies");
         }
     }
-
 }

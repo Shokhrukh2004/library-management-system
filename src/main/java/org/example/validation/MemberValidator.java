@@ -32,5 +32,4 @@ public class MemberValidator {
             throw new ValidationException("Email domain must be valid gmail.com");
         }
     }
-
 }

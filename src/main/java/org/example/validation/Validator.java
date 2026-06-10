@@ -22,8 +22,8 @@ public class Validator {
         }
     }
 
-    public static void validateIntRange(int value, int end, String fieldName){
-        if(value > end || value <= 0) {
+    public static void validateIntRange(int start, int end, String fieldName){
+        if(start > end || start <= 0) {
             throw new ValidationException(fieldName + " should be > 0 and <=  " + end);
         }
     }
