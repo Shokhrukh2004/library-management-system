@@ -1,84 +1,36 @@
-15:44:03 INFO  org.example.member.MemberService - Adding new member - email: john@mail.ru
-15:44:03 INFO  org.example.member.MemberService - Member successfully added - email: john@mail.ru
-15:44:03 INFO  org.example.member.MemberService - Adding new member - email: abc123
-15:44:03 INFO  org.example.member.MemberService - Adding new member - email: john@mail.ru
-15:44:03 WARN  org.example.member.MemberService - Email already exists - email: john@mail.ru
-15:54:35 INFO  org.example.member.MemberService - Updating member - memberId: 1
-15:54:35 INFO  org.example.member.MemberService - Member updated successfully - memberId: 1
-16:04:03 INFO  org.example.member.MemberService - Updating member - memberId: 1
-16:04:03 WARN  org.example.member.MemberService - Email already exists - email: john@mail.ru
-16:05:14 INFO  org.example.member.MemberService - Updating member - memberId: 1
-16:14:46 INFO  org.example.book.BookService - activating book - id: 1
-16:14:46 INFO  org.example.book.BookService - activated book successfully - id: 1
-16:14:53 INFO  org.example.book.BookService - activating book - id: 1
-16:14:53 INFO  org.example.book.BookService - activated book successfully - id: 1
-16:14:53 INFO  org.example.book.BookService - activating book - id: -1
-16:14:53 INFO  org.example.book.BookService - deactivating book - id: 1
-16:14:53 WARN  org.example.book.BookService - Book is not active - id: 1
-16:14:53 INFO  org.example.book.BookService - activating book - id: 1
-16:14:53 WARN  org.example.book.BookService - Book is active already - id: 1
-16:14:53 INFO  org.example.book.BookService - deactivating book - id: 1
-16:14:53 INFO  org.example.book.BookService - deactivated book successfully - id: 1
-16:14:53 INFO  org.example.book.BookService - deactivating book - id: 1
-16:14:53 INFO  org.example.book.BookService - deactivating book - id: -1
-16:14:53 INFO  org.example.book.BookService - deactivating book - id: 1
-16:14:53 WARN  org.example.book.BookService - Book is already loaned - id: 1
-16:14:53 INFO  org.example.book.BookService - activating book - id: 1
-16:15:10 INFO  org.example.member.MemberService - Adding new member - email: john@mail.ru
-16:15:10 INFO  org.example.member.MemberService - Member successfully added - email: john@mail.ru
-16:15:10 INFO  org.example.member.MemberService - Updating member - memberId: 1
-16:15:10 WARN  org.example.member.MemberService - Email already exists - email: john@mail.ru
-16:15:10 INFO  org.example.member.MemberService - Adding new member - email: abc123
-16:15:10 INFO  org.example.member.MemberService - Adding new member - email: john@mail.ru
-16:15:10 WARN  org.example.member.MemberService - Email already exists - email: john@mail.ru
-16:15:10 INFO  org.example.member.MemberService - Updating member - memberId: 1
-16:15:10 INFO  org.example.member.MemberService - Updating member - memberId: 1
-16:15:10 INFO  org.example.member.MemberService - Updating member - memberId: 1
-16:15:10 INFO  org.example.member.MemberService - Member updated successfully - memberId: 1
-16:27:15 INFO  org.example.member.MemberService - Activating member - memberId: 1
-16:27:15 WARN  org.example.member.MemberService - Member is active already - memberId: 1
-16:27:27 INFO  org.example.member.MemberService - Activating member - memberId: 1
-16:27:27 INFO  org.example.member.MemberService - Member activated successfully - memberId: 1
-16:30:05 INFO  org.example.member.MemberService - Activating member - memberId: 1
-16:30:05 WARN  org.example.member.MemberService - Member is active already - memberId: 1
-16:31:14 INFO  org.example.member.MemberService - Activating member - memberId: 1
-16:31:14 WARN  org.example.member.MemberService - Member is active already - memberId: 1
-16:32:04 INFO  org.example.member.MemberService - Activating member - memberId: 1
-16:34:11 INFO  org.example.member.MemberService - Activating member - memberId: -10
-16:37:09 INFO  org.example.member.MemberService - Deactivating member - memberId: 1
-16:37:09 INFO  org.example.member.MemberService - Member deactivated successfully - memberId: 1
-16:39:40 INFO  org.example.member.MemberService - Deactivating member - memberId: 1
-16:39:40 WARN  org.example.member.MemberService - Member has active loan - memberId: 1
-16:39:46 INFO  org.example.member.MemberService - Deactivating member - memberId: 1
-16:39:46 WARN  org.example.member.MemberService - Member has active loan - memberId: 1
-16:41:56 INFO  org.example.member.MemberService - Deactivating member - memberId: 1
-16:41:56 WARN  org.example.member.MemberService - Member is not active already - memberId: 1
-16:43:11 INFO  org.example.member.MemberService - Deactivating member - memberId: 1
-16:44:28 INFO  org.example.member.MemberService - Deactivating member - memberId: 1
-16:44:28 WARN  org.example.member.MemberService - Member not found - memberId: 1
-16:45:45 INFO  org.example.member.MemberService - Deactivating member - memberId: -1
-16:46:11 INFO  org.example.member.MemberService - Deactivating member - memberId: -1
-17:45:37 WARN  org.example.loan.LoanBusinessLogic - Member has already borrowed same book - memberId: 1, bookId: 1
-17:47:25 WARN  org.example.loan.LoanBusinessLogic - Book has no available copies - bookId: 1
-17:50:12 WARN  org.example.loan.LoanBusinessLogic - Member is not active - memberId: 1
-17:51:31 WARN  org.example.loan.LoanBusinessLogic - Book is not active - bookId: 1
-17:54:02 WARN  org.example.loan.LoanBusinessLogic - Member has overdue already - memberId: 1
-17:58:04 WARN  org.example.loan.LoanBusinessLogic - Loan has already been returned - loanId: 1
-18:24:10 WARN  org.example.loan.LoanBusinessLogic - Member is not active - memberId: 1
-18:24:10 WARN  org.example.loan.LoanBusinessLogic - Member has already borrowed same book - memberId: 1, bookId: 1
-18:24:10 WARN  org.example.loan.LoanBusinessLogic - Loan has already been returned - loanId: 1
-18:24:10 WARN  org.example.loan.LoanBusinessLogic - Book has no available copies - bookId: 1
-18:24:10 WARN  org.example.loan.LoanBusinessLogic - Member has overdue already - memberId: 1
-18:24:10 WARN  org.example.loan.LoanBusinessLogic - Book has no available copies - bookId: 1
-18:34:17 WARN  org.example.loan.LoanBusinessLogic - Member is not active - memberId: 1
-18:34:17 WARN  org.example.loan.LoanBusinessLogic - Member has already borrowed same book - memberId: 1, bookId: 1
-18:34:17 WARN  org.example.loan.LoanBusinessLogic - Loan has already been returned - loanId: 1
-18:34:17 WARN  org.example.loan.LoanBusinessLogic - Book has no available copies - bookId: 1
-18:34:17 WARN  org.example.loan.LoanBusinessLogic - Member has overdue already - memberId: 1
-18:34:17 WARN  org.example.loan.LoanBusinessLogic - Book is not active - bookId: 1
-18:36:15 WARN  org.example.loan.LoanBusinessLogic - Member is not active - memberId: 1
-18:36:15 WARN  org.example.loan.LoanBusinessLogic - Member has already borrowed same book - memberId: 1, bookId: 1
-18:36:15 WARN  org.example.loan.LoanBusinessLogic - Loan has already been returned - loanId: 1
-18:36:15 WARN  org.example.loan.LoanBusinessLogic - Book has no available copies - bookId: 1
-18:36:15 WARN  org.example.loan.LoanBusinessLogic - Member has overdue already - memberId: 1
-18:36:15 WARN  org.example.loan.LoanBusinessLogic - Book is not active - bookId: 1
+15:57:29 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+15:57:29 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
+16:01:08 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+16:01:41 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+16:04:44 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+16:04:44 WARN  org.example.loan.LoanService - Member not found with id: 1
+16:05:23 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+16:05:23 WARN  org.example.loan.LoanService - Member not found with id: 1
+16:06:37 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+16:06:37 WARN  org.example.loan.LoanService - Book not found with id 1
+16:09:25 INFO  org.example.loan.LoanService - Creating loan - memberId: -1, bookId: -1
+16:19:10 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+16:19:10 INFO  org.example.loan.LoanService - Returned loan successfully - loanId: 1
+16:19:42 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+16:19:42 INFO  org.example.loan.LoanService - Returned loan successfully - loanId: 1
+16:21:08 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+16:21:08 INFO  org.example.loan.LoanService - Returned loan successfully - loanId: 1
+16:23:44 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+16:26:19 INFO  org.example.loan.LoanService - Returning loan - loanId: 0
+16:26:35 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+16:26:35 WARN  org.example.loan.LoanService - Loan not found with loanId: 1
+16:28:05 INFO  org.example.loan.LoanService - Returning loan - loanId: -1
+16:31:53 INFO  org.example.loan.LoanService - Returning loan - loanId: -1
+16:31:53 INFO  org.example.loan.LoanService - Creating loan - memberId: -1, bookId: -1
+16:31:53 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+16:31:53 WARN  org.example.loan.LoanService - Loan not found with loanId: 1
+16:31:53 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+16:31:53 WARN  org.example.loan.LoanService - Book not found with id 1
+16:31:53 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+16:31:53 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+16:31:53 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
+16:31:53 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+16:31:53 WARN  org.example.loan.LoanService - Member not found with id: 1
+16:31:53 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+16:31:53 INFO  org.example.loan.LoanService - Returned loan successfully - loanId: 1
+16:31:53 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1

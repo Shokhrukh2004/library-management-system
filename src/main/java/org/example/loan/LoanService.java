@@ -48,8 +48,8 @@ public class LoanService {
         Member member = getMember(loanRequest.getMemberId());
 
         loanLogic.checkCreateRequest(member, book);
-        bookRepo.decreaseAvailableCopies(book.getId());
 
+        bookRepo.decreaseAvailableCopies(book.getId());
         loanRepo.save(LoanParser.toLoanFromCreateRequest(loanRequest));
         log.info("Loan created successfully - bookId: {}, memberId: {}", loanRequest.getBookId(), loanRequest.getMemberId());
     }
@@ -155,8 +155,8 @@ public class LoanService {
         loanLogic.checkReturned(loan);
 
         bookRepo.increaseAvailableCopies(loan.getBookId());
-
         loanRepo.returnLoan(loanId);
+
         log.info("Returned loan successfully - loanId: {}", loanId);
     }
 
