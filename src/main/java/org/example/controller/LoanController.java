@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import jakarta.validation.Valid;
 import org.example.loan.LoanService;
 import org.example.loan.dto.LoanCreateRequest;
 import org.example.loan.dto.LoanResponse;
@@ -18,7 +19,7 @@ public class LoanController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody LoanCreateRequest request){
+    public ResponseEntity<Void> save(@Valid @RequestBody LoanCreateRequest request){
         loanService.save(request);
         return ResponseEntity.ok().build();
     }

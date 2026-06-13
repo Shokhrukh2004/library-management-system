@@ -66,8 +66,8 @@ public class MemberServiceSaveAndUpdateTest {
     }
 
     @Test
-    void addMember_invalidRequest_throwsValidationException(){
-        MemberCreateRequest request = new MemberCreateRequest("", "abc123");
+    void addMember_invalidEmail_throwsValidationException(){
+        MemberCreateRequest request = new MemberCreateRequest("joe", "abc123");
 
         assertThrows(ValidationException.class, () -> memberService.addMember(request));
 
@@ -125,8 +125,8 @@ public class MemberServiceSaveAndUpdateTest {
     }
 
     @Test
-    void updateMember_invalidRequest_throwsValidationException(){
-        MemberUpdateRequest request = new MemberUpdateRequest(1, "", "john");
+    void updateMember_invalidEmail_throwsValidationException(){
+        MemberUpdateRequest request = new MemberUpdateRequest(1, "joe", "john");
 
         assertThrows(ValidationException.class, () -> memberService.update(request));
 

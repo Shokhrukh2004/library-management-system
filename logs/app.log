@@ -803,3 +803,147 @@ org.example.exception.NotFoundException: Book not found with id 11
 17:57:20 INFO  org.example.member.MemberService - Updating member - memberId: 0
 17:57:53 INFO  org.example.member.MemberService - Updating member - memberId: 0
 17:58:16 INFO  org.example.member.MemberService - Updating member - memberId: 2
+18:23:46 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+18:23:46 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+18:23:49 INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+18:23:49 INFO  org.example.Main - Starting Main using Java 17.0.16 with PID 41829 (/Users/shokhrukhernazarov/Projects/library-management-system/target/classes started by shokhrukhernazarov in /Users/shokhrukhernazarov/Projects/library-management-system)
+18:23:49 INFO  org.example.Main - No active profile set, falling back to 1 default profile: "default"
+18:23:49 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+18:23:49 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+18:23:49 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+18:23:49 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+18:23:49 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+18:23:49 INFO  org.example.Main - Started Main in 0.676 seconds (process running for 0.843)
+18:29:04 INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+18:29:04 INFO  org.example.Main - Starting Main using Java 17.0.16 with PID 41988 (/Users/shokhrukhernazarov/Projects/library-management-system/target/classes started by shokhrukhernazarov in /Users/shokhrukhernazarov/Projects/library-management-system)
+18:29:04 INFO  org.example.Main - No active profile set, falling back to 1 default profile: "default"
+18:29:05 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+18:29:05 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+18:29:05 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+18:29:05 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+18:29:05 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+18:29:05 INFO  org.example.Main - Started Main in 0.669 seconds (process running for 0.837)
+18:29:10 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+18:29:10 WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'int'; For input string: "sdes"]
+18:29:11 WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'int'; For input string: "sdes"]
+18:29:20 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+18:29:20 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7faf9c8f
+18:29:20 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+18:55:05 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+18:55:05 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+18:55:06 INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+18:55:06 INFO  org.example.Main - Starting Main using Java 17.0.16 with PID 42799 (/Users/shokhrukhernazarov/Projects/library-management-system/target/classes started by shokhrukhernazarov in /Users/shokhrukhernazarov/Projects/library-management-system)
+18:55:06 INFO  org.example.Main - No active profile set, falling back to 1 default profile: "default"
+18:55:06 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+18:55:06 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+18:55:06 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+18:55:06 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+18:55:07 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+18:55:07 INFO  org.example.Main - Started Main in 0.667 seconds (process running for 0.833)
+18:55:11 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+18:55:18 WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'int'; For input string: "asd"]
+18:57:29 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+18:57:29 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@20cb9e2e
+18:57:29 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+18:58:00 INFO  org.example.book.BookService - activating book - id: 1
+18:58:00 INFO  org.example.book.BookService - activated book successfully - id: 1
+18:58:00 INFO  org.example.book.BookService - activating book - id: -1
+18:58:00 INFO  org.example.book.BookService - deactivating book - id: 1
+18:58:00 WARN  org.example.book.BookService - Book is not active - id: 1
+18:58:00 INFO  org.example.book.BookService - activating book - id: 1
+18:58:00 WARN  org.example.book.BookService - Book is active already - id: 1
+18:58:00 INFO  org.example.book.BookService - deactivating book - id: 1
+18:58:00 INFO  org.example.book.BookService - deactivated book successfully - id: 1
+18:58:00 INFO  org.example.book.BookService - deactivating book - id: 1
+18:58:00 WARN  org.example.book.BookService - Book not found - id: 1
+18:58:00 INFO  org.example.book.BookService - deactivating book - id: -1
+18:58:00 INFO  org.example.book.BookService - deactivating book - id: 1
+18:58:00 WARN  org.example.book.BookService - Book is already loaned - id: 1
+18:58:00 INFO  org.example.book.BookService - activating book - id: 1
+18:58:00 WARN  org.example.book.BookService - Book not found - id: 1
+19:02:29 INFO  org.example.book.BookService - updating book - id: 1
+19:02:29 WARN  org.example.book.BookService - Book not found - id: 1
+19:02:29 INFO  org.example.book.BookService - Adding new book - isbn: abc123
+19:02:29 INFO  org.example.book.BookService - Added new book successfully - isbn: abc123
+19:02:29 INFO  org.example.book.BookService - updating book - id: 1
+19:02:29 INFO  org.example.book.BookService - updated book successfully - id: 1
+19:02:29 INFO  org.example.book.BookService - Adding new book - isbn: abc123
+19:02:29 INFO  org.example.book.BookService - Added new book successfully - isbn: abc123
+19:02:29 INFO  org.example.book.BookService - Adding new book - isbn: abc123
+19:02:29 WARN  org.example.book.BookService - Book with ISBN abc123 already exists
+19:02:29 INFO  org.example.book.BookService - updating book - id: 1
+19:02:29 WARN  org.example.book.BookService - Book is not active - id: 1
+19:02:29 INFO  org.example.book.BookService - updating book - id: 1
+19:02:59 INFO  org.example.book.BookService - updating book - id: 1
+19:02:59 WARN  org.example.book.BookService - Book not found - id: 1
+19:02:59 INFO  org.example.book.BookService - updating book - id: 1
+19:02:59 INFO  org.example.book.BookService - updated book successfully - id: 1
+19:02:59 INFO  org.example.book.BookService - Adding new book - isbn: abc123
+19:02:59 INFO  org.example.book.BookService - Added new book successfully - isbn: abc123
+19:02:59 INFO  org.example.book.BookService - Adding new book - isbn: abc123
+19:02:59 WARN  org.example.book.BookService - Book with ISBN abc123 already exists
+19:02:59 INFO  org.example.book.BookService - updating book - id: 1
+19:02:59 WARN  org.example.book.BookService - Book is not active - id: 1
+19:02:59 INFO  org.example.book.BookService - updating book - id: 1
+19:04:52 WARN  org.example.loan.LoanBusinessLogic - Member is not active - memberId: 1
+19:04:52 WARN  org.example.loan.LoanBusinessLogic - Member has already borrowed same book - memberId: 1, bookId: 1
+19:04:52 WARN  org.example.loan.LoanBusinessLogic - Loan has already been returned - loanId: 1
+19:04:52 WARN  org.example.loan.LoanBusinessLogic - Book has no available copies - bookId: 1
+19:04:52 WARN  org.example.loan.LoanBusinessLogic - Member has overdue already - memberId: 1
+19:04:52 WARN  org.example.loan.LoanBusinessLogic - Book is not active - bookId: 1
+19:04:57 INFO  org.example.loan.LoanService - Returning loan - loanId: -1
+19:04:57 INFO  org.example.loan.LoanService - Creating loan - memberId: -1, bookId: -1
+19:04:57 WARN  org.example.loan.LoanService - Book not found with id -1
+19:04:57 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+19:04:57 WARN  org.example.loan.LoanService - Loan not found with loanId: 1
+19:04:57 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:04:57 WARN  org.example.loan.LoanService - Book not found with id 1
+19:04:57 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+19:04:57 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:04:57 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
+19:04:57 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:04:57 WARN  org.example.loan.LoanService - Member not found with id: 1
+19:04:57 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+19:04:57 INFO  org.example.loan.LoanService - Returned loan successfully - loanId: 1
+19:04:57 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:05:12 INFO  org.example.loan.LoanService - Returning loan - loanId: -1
+19:05:12 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+19:05:12 WARN  org.example.loan.LoanService - Loan not found with loanId: 1
+19:05:12 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:05:12 WARN  org.example.loan.LoanService - Book not found with id 1
+19:05:12 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+19:05:12 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:05:12 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
+19:05:12 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:05:12 WARN  org.example.loan.LoanService - Member not found with id: 1
+19:05:12 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+19:05:12 INFO  org.example.loan.LoanService - Returned loan successfully - loanId: 1
+19:05:12 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:05:23 INFO  org.example.member.MemberService - Activating member - memberId: 1
+19:05:23 INFO  org.example.member.MemberService - Member activated successfully - memberId: 1
+19:05:23 INFO  org.example.member.MemberService - Deactivating member - memberId: 1
+19:05:23 WARN  org.example.member.MemberService - Member is not active already - memberId: 1
+19:05:23 INFO  org.example.member.MemberService - Activating member - memberId: 1
+19:05:23 WARN  org.example.member.MemberService - Member not found - memberId: 1
+19:05:23 INFO  org.example.member.MemberService - Deactivating member - memberId: -1
+19:05:23 INFO  org.example.member.MemberService - Deactivating member - memberId: 1
+19:05:23 WARN  org.example.member.MemberService - Member not found - memberId: 1
+19:05:23 INFO  org.example.member.MemberService - Activating member - memberId: 1
+19:05:23 WARN  org.example.member.MemberService - Member is active already - memberId: 1
+19:05:23 INFO  org.example.member.MemberService - Deactivating member - memberId: 1
+19:05:23 INFO  org.example.member.MemberService - Member deactivated successfully - memberId: 1
+19:05:23 INFO  org.example.member.MemberService - Deactivating member - memberId: 1
+19:05:23 WARN  org.example.member.MemberService - Member has active loan - memberId: 1
+19:05:23 INFO  org.example.member.MemberService - Activating member - memberId: -10
+19:05:38 INFO  org.example.member.MemberService - Adding new member - email: john@mail.ru
+19:05:38 INFO  org.example.member.MemberService - Member successfully added - email: john@mail.ru
+19:05:38 INFO  org.example.member.MemberService - Updating member - memberId: 1
+19:05:38 WARN  org.example.member.MemberService - Email already exists - email: john@mail.ru
+19:05:38 INFO  org.example.member.MemberService - Adding new member - email: abc123
+19:05:38 INFO  org.example.member.MemberService - Adding new member - email: john@mail.ru
+19:05:38 WARN  org.example.member.MemberService - Email already exists - email: john@mail.ru
+19:05:38 INFO  org.example.member.MemberService - Updating member - memberId: 1
+19:05:38 WARN  org.example.member.MemberService - Member not found - memberId: 1
+19:05:38 INFO  org.example.member.MemberService - Updating member - memberId: 1
+19:05:38 INFO  org.example.member.MemberService - Updating member - memberId: 1
+19:05:38 INFO  org.example.member.MemberService - Member updated successfully - memberId: 1

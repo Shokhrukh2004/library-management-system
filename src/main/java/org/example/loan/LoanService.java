@@ -40,9 +40,6 @@ public class LoanService {
     @Transactional
     public void save(LoanCreateRequest loanRequest) {
         log.info("Creating loan - memberId: {}, bookId: {}", loanRequest.getMemberId(), loanRequest.getBookId());
-        Validator.validatePositiveInt(loanRequest.getMemberId(), "memberId");
-        Validator.validatePositiveInt(loanRequest.getBookId(), "bookId");
-
 
         Book book = getBook(loanRequest.getBookId());
         Member member = getMember(loanRequest.getMemberId());
@@ -55,14 +52,14 @@ public class LoanService {
     }
 
     public LoanResponse findById(int id){
-        Validator.validatePositiveInt(id, "Loan ID");
+        Validator.validateInt(id, "Id");
         Loan loan = loanRepo.findById(id).orElseThrow(() -> new NotFoundException("Book not found with id " + id));
 
         return LoanParser.toLoanResponseFromLoan(loan);
     }
 
     public List<LoanResponse> findByMemberId(int memberId){
-        Validator.validatePositiveInt(memberId, "Member ID");
+        Validator.validateInt(memberId, "Member Id");
         List<Loan> loans = loanRepo.findByMemberId(memberId);
         if(loans.isEmpty()){
             throw new NotFoundException("Loan Not Found with member ID: " + memberId);
@@ -75,9 +72,9 @@ public class LoanService {
     }
 
     public List<LoanResponse> findByBookId(int bookId){
-        Validator.validatePositiveInt(bookId, "Book ID");
-
+        Validator.validateInt(bookId, "Book id");
         List<Loan> loans = loanRepo.findByBookId(bookId);
+
         if(loans.isEmpty()){
             throw new NotFoundException("Loan Not Found with book ID: " + bookId);
         }
@@ -89,8 +86,8 @@ public class LoanService {
     }
 
     public LoanResponse findActiveByMemberAndBook(int memberId, int bookId){
-        Validator.validatePositiveInt(memberId, "Member ID");
-        Validator.validatePositiveInt(bookId, "Book ID");
+        Validator.validateInt(memberId, "Member id");
+        Validator.validateInt(bookId, "Book id");
 
         Loan loan = loanRepo.findActiveByMemberAndBook(memberId, bookId)
                 .orElseThrow(() ->
@@ -149,7 +146,7 @@ public class LoanService {
     @Transactional
     public void returnBook(int loanId){
         log.info("Returning loan - loanId: {}", loanId);
-        Validator.validatePositiveInt(loanId, "Loan ID");
+        Validator.validateInt(loanId, "Loan id");
 
         Loan loan = getLoan(loanId);
         loanLogic.checkReturned(loan);
@@ -159,6 +156,8 @@ public class LoanService {
 
         log.info("Returned loan successfully - loanId: {}", loanId);
     }
+
+
 
 
     private Book getBook(int bookId){

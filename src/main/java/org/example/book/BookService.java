@@ -6,16 +6,15 @@ import org.example.book.dto.BookUpdateRequest;
 import org.example.book.repository.BookRepository;
 import org.example.exception.ConflictException;
 import org.example.exception.NotFoundException;
+import org.example.exception.ValidationException;
 import org.example.loan.enums.Status;
 import org.example.loan.repository.LoanRepository;
-import org.example.validation.BookValidator;
 import org.example.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookService {
@@ -32,7 +31,7 @@ public class BookService {
 
     public void save(BookCreateRequest request) {
         log.info("Adding new book - isbn: {}", request.getIsbn());
-        BookValidator.validateCreateRequest(request);
+
         isbnDuplicateCheck(request.getIsbn());
 
         repo.save(BookParser.toBookFromCreateRequest(request));
@@ -40,10 +39,10 @@ public class BookService {
     }
 
     public BookResponse findById(int id){
-        Validator.validatePositiveInt(id, "Id");
+        Validator.validateInt(id, "Id");
+
         Book book = repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found with id " + id));
-
 
         return BookParser.toBookResponse(book);
     }
@@ -61,7 +60,7 @@ public class BookService {
     }
 
     public List<BookResponse> findByTitle(String title){
-        Validator.validateString(title, "Title");
+        Validator.validateStr(title, "Title");
         List<Book>  books = repo.findByTitle(title);
         if(books.isEmpty()){
             throw new NotFoundException("No books found by title " + title);
@@ -73,7 +72,7 @@ public class BookService {
     }
 
     public List<BookResponse> findByAuthor(String author){
-        Validator.validateString(author, "Author");
+        Validator.validateStr(author, "Author");
         List<Book> books = repo.findByAuthor(author);
         if(books.isEmpty()){
             throw new NotFoundException("No books found by author " + author);
@@ -86,7 +85,7 @@ public class BookService {
 
     public void update(BookUpdateRequest book){
         log.info("updating book - id: {}", book.getId());
-        BookValidator.validateUpdateRequest(book);
+        validateCopies(book.getTotalCopies(), book.getAvailableCopies());
 
         Book book1 = getBookIfExist(book.getId());
         isBookActiveCheck(book1);
@@ -100,7 +99,7 @@ public class BookService {
 
     public void deactivate(int id){
         log.info("deactivating book - id: {}", id);
-        Validator.validatePositiveInt(id, "Id");
+        Validator.validateInt(id, "Id");
 
         Book book = getBookIfExist(id);
         isBookActiveCheck(book);
@@ -112,7 +111,7 @@ public class BookService {
 
     public void activate(int id){
         log.info("activating book - id: {}", id);
-        Validator.validatePositiveInt(id, "Id");
+        Validator.validateInt(id, "Id");
 
         Book book = getBookIfExist(id);
         isBookNotActiveCheck(book);
@@ -131,6 +130,8 @@ public class BookService {
                 .map(BookParser::toBookResponse)
                 .toList();
     }
+
+
 
 
     private void isbnDuplicateCheck(String isbn){
@@ -172,5 +173,11 @@ public class BookService {
                     log.warn("Book not found - id: {}", id);
                     return new NotFoundException("Book with id " + id + " not found");
                 });
+    }
+
+    private static void validateCopies(int totalCopies, int availableCopies){
+        if(totalCopies < availableCopies){
+            throw new ValidationException("Total Copies can't be less than Available Copies");
+        }
     }
 }

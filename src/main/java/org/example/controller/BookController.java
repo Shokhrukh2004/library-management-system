@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import jakarta.validation.Valid;
 import org.example.book.BookService;
 import org.example.book.dto.BookCreateRequest;
 import org.example.book.dto.BookResponse;
@@ -20,7 +21,7 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody BookCreateRequest request) {
+    public ResponseEntity<Void> save(@Valid @RequestBody BookCreateRequest request) {
         bookService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -51,7 +52,7 @@ public class BookController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody BookUpdateRequest request) {
+    public ResponseEntity<Void> update(@Valid @RequestBody BookUpdateRequest request) {
         bookService.update(request);
         return ResponseEntity.ok().build();
     }

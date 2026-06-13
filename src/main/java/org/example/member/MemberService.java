@@ -2,13 +2,13 @@ package org.example.member;
 
 import org.example.exception.ConflictException;
 import org.example.exception.NotFoundException;
+import org.example.exception.ValidationException;
 import org.example.loan.enums.Status;
 import org.example.loan.repository.LoanRepository;
 import org.example.member.dto.MemberCreateRequest;
 import org.example.member.dto.MemberResponse;
 import org.example.member.dto.MemberUpdateRequest;
 import org.example.member.repository.MemberRepository;
-import org.example.validation.MemberValidator;
 import org.example.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class MemberService {
 
     public void addMember(MemberCreateRequest member){
         log.info("Adding new member - email: {}", member.getEmail());
-        MemberValidator.validateCreateRequest(member);
+        validateEmail(member.getEmail());
         emailDuplicateCheck(member.getEmail());
 
         repo.save(toMemberFromCreateRequest(member));
@@ -41,15 +41,15 @@ public class MemberService {
     }
 
     public MemberResponse findById(int id){
-        Validator.validatePositiveInt(id, "Id");
+        Validator.validateInt(id, "Id");
 
         return toResponseFromMember(getMemberIfExist(id));
     }
 
     public List<MemberResponse> findByName(String name){
-        Validator.validateString(name, "Name");
-
+        Validator.validateStr(name, "Name");
         List<Member> members = repo.findByName(name);
+
         if(members.isEmpty()){
             throw new NotFoundException("Member not found with name: " + name);
         }
@@ -60,7 +60,9 @@ public class MemberService {
     }
 
     public MemberResponse findByEmail(String email){
-        MemberValidator.validateEmail(email);
+        Validator.validateStr(email, "Email");
+        validateEmail(email);
+
         Member member = repo.findByEmail(email)
                 .orElseThrow(() ->
                         new NotFoundException("Member not found with email: " + email));
@@ -81,7 +83,7 @@ public class MemberService {
 
     public void update(MemberUpdateRequest member){
         log.info("Updating member - memberId: {}", member.getId());
-        MemberValidator.validateUpdateRequest(member);
+        validateEmail(member.getEmail());
 
         Member updateMember = getMemberIfExist(member.getId());
         emailDuplicateCheck(member.getEmail());
@@ -95,7 +97,8 @@ public class MemberService {
 
     public void deactivate(int id){
         log.info("Deactivating member - memberId: {}", id);
-        Validator.validatePositiveInt(id, "Id");
+        Validator.validateInt(id, "Id");
+
         Member member = getMemberIfExist(id);
 
         isMemberActiveCheck(member);
@@ -107,7 +110,7 @@ public class MemberService {
 
     public void activate(int id){
         log.info("Activating member - memberId: {}", id);
-        Validator.validatePositiveInt(id, "Id");
+        Validator.validateInt(id, "Id");
 
         Member member = getMemberIfExist(id);
         isMemberNotActiveCheck(member);
@@ -126,6 +129,7 @@ public class MemberService {
                 .map(MemberParser::toResponseFromMember)
                 .toList();
     }
+
 
 
     private void emailDuplicateCheck(String email){
@@ -166,5 +170,19 @@ public class MemberService {
                     log.warn("Member not found - memberId: {}", id);
                     return new NotFoundException("Member not found");
                 });
+    }
+
+    private static void validateEmail(String value) {
+        int atIndex = value.indexOf("@");
+
+        if (atIndex <= 0 || atIndex == value.length() - 1) {
+            throw new ValidationException("Email must have content before and after @.");
+        }
+
+        String domain = value.substring(atIndex + 1);
+
+        if (!domain.contains(".") || domain.startsWith(".") || domain.endsWith(".")) {
+            throw new ValidationException("Email domain must be valid gmail.com");
+        }
     }
 }

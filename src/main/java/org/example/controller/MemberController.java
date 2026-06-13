@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import jakarta.validation.Valid;
 import org.example.member.MemberService;
 import org.example.member.dto.MemberCreateRequest;
 import org.example.member.dto.MemberResponse;
@@ -20,7 +21,7 @@ public class MemberController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody MemberCreateRequest request){
+    public ResponseEntity<Void> save(@Valid @RequestBody MemberCreateRequest request){
         memberService.addMember(request);
         return ResponseEntity.ok().build();
     }
@@ -51,7 +52,7 @@ public class MemberController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody MemberUpdateRequest request){
+    public ResponseEntity<Void> update(@Valid @RequestBody MemberUpdateRequest request){
         memberService.update(request);
         return ResponseEntity.ok().build();
     }
