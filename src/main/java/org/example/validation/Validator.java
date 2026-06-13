@@ -1,30 +1,22 @@
 package org.example.validation;
 
 import org.example.exception.ValidationException;
+import org.springframework.web.bind.annotation.PathVariable;
 
 public class Validator {
 
-    public static void validateString(String value, String fieldName){
-        if(value == null || value.isBlank() || value.length() < 3){
-            throw new ValidationException(fieldName + " should have at least 3 characters.");
+    public static void validateInt(int value, String field){
+        if(value < 1) {
+            throw new ValidationException(field + " must be positive");
         }
     }
 
-    public static void validatePositiveInt(int value, String fieldName){
-        if(value < 1){
-            throw new ValidationException(fieldName + " should not be negative.");
+    public static void validateStr(String value, String field){
+        if(value == null || value.isBlank()) {
+            throw new ValidationException(field + " is required");
         }
-    }
-
-    public static void validateNotNull(Object value, String fieldName){
-        if(value == null){
-            throw new ValidationException(fieldName + " should not be null.");
-        }
-    }
-
-    public static void validateIntRange(int start, int end, String fieldName){
-        if(start > end || start <= 0) {
-            throw new ValidationException(fieldName + " should be > 0 and <=  " + end);
+        else if(value.length() < 3) {
+            throw new ValidationException(field + " must have at least 3 characters");
         }
     }
 }

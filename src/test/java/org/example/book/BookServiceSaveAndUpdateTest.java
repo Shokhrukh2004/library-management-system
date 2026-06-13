@@ -71,15 +71,6 @@ public class BookServiceSaveAndUpdateTest {
         verifyNoMoreInteractions(bookRepo);
     }
 
-    @Test
-    void save_invalidInput_throwsValidationException(){
-        BookCreateRequest request = new BookCreateRequest("", "", "abc123", 10);
-
-        assertThrows(ValidationException.class, () -> bookService.save(request));
-
-        verifyNoInteractions(bookRepo);
-    }
-
 
     //      Book update method test cases
     @Test

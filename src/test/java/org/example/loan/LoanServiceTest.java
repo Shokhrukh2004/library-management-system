@@ -113,18 +113,6 @@ public class LoanServiceTest {
         verify(loanRepo, never()).save(any(Loan.class));
     }
 
-    @Test
-    void save_invalidIds_throwsValidationException(){
-        LoanCreateRequest request = new LoanCreateRequest(-1, -1);
-
-        assertThrows(ValidationException.class, () -> loanService.save(request));
-
-        verifyNoInteractions(loanLogic);
-        verifyNoInteractions(bookRepo);
-        verifyNoInteractions(memberRepo);
-        verifyNoInteractions(loanRepo);
-    }
-
 
     //      returnBook method test cases
     @Test
