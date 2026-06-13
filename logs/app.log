@@ -34,3 +34,11 @@
 16:31:53 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
 16:31:53 INFO  org.example.loan.LoanService - Returned loan successfully - loanId: 1
 16:31:53 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+16:28:14 INFO  org.example.Main - Starting Main using Java 17.0.16 with PID 38103 (/Users/shokhrukhernazarov/Projects/library-management-system/target/classes started by shokhrukhernazarov in /Users/shokhrukhernazarov/Projects/library-management-system)
+16:28:14 INFO  org.example.Main - No active profile set, falling back to 1 default profile: "default"
+16:28:14 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+16:28:14 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+16:28:14 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+16:28:14 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+16:28:14 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+16:28:14 INFO  org.example.Main - Started Main in 0.587 seconds (process running for 0.77)
