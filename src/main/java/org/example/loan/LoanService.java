@@ -151,7 +151,7 @@ public class LoanService {
         Loan loan = getLoan(loanId);
         loanLogic.checkReturned(loan);
 
-        bookRepo.increaseAvailableCopies(loan.getBookId());
+        bookRepo.increaseAvailableCopies(loan.getBookId().getId());
         loanRepo.returnLoan(loanId);
 
         log.info("Returned loan successfully - loanId: {}", loanId);
