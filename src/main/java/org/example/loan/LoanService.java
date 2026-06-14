@@ -5,6 +5,7 @@ import org.example.book.repository.BookRepository;
 import org.example.exception.NotFoundException;
 import org.example.loan.dto.LoanCreateRequest;
 import org.example.loan.dto.LoanResponse;
+import org.example.loan.enums.Status;
 import org.example.loan.repository.LoanRepository;
 import org.example.member.Member;
 import org.example.member.repository.MemberRepository;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -45,9 +47,10 @@ public class LoanService {
         Member member = getMember(loanRequest.getMemberId());
 
         loanLogic.checkCreateRequest(member, book);
+        book.setAvailableCopies(book.getAvailableCopies() - 1);
 
-        bookRepo.decreaseAvailableCopies(book.getId());
-        loanRepo.save(LoanParser.toLoanFromCreateRequest(loanRequest));
+        bookRepo.save(book);
+        loanRepo.save(LoanParser.toLoanFromCreateRequest(loanRequest, member, book));
         log.info("Loan created successfully - bookId: {}, memberId: {}", loanRequest.getBookId(), loanRequest.getMemberId());
     }
 
@@ -60,7 +63,7 @@ public class LoanService {
 
     public List<LoanResponse> findByMemberId(int memberId){
         Validator.validateInt(memberId, "Member Id");
-        List<Loan> loans = loanRepo.findByMemberId(memberId);
+        List<Loan> loans = loanRepo.findByMember_Id(memberId);
         if(loans.isEmpty()){
             throw new NotFoundException("Loan Not Found with member ID: " + memberId);
         }
@@ -73,7 +76,7 @@ public class LoanService {
 
     public List<LoanResponse> findByBookId(int bookId){
         Validator.validateInt(bookId, "Book id");
-        List<Loan> loans = loanRepo.findByBookId(bookId);
+        List<Loan> loans = loanRepo.findByBook_Id(bookId);
 
         if(loans.isEmpty()){
             throw new NotFoundException("Loan Not Found with book ID: " + bookId);
@@ -89,7 +92,7 @@ public class LoanService {
         Validator.validateInt(memberId, "Member id");
         Validator.validateInt(bookId, "Book id");
 
-        Loan loan = loanRepo.findActiveByMemberAndBook(memberId, bookId)
+        Loan loan = loanRepo.findByMember_IdAndBook_IdAndStatus(memberId, bookId, Status.ACTIVE)
                 .orElseThrow(() ->
                         new NotFoundException("Loan not found with member id " + memberId + " and book id " + bookId));
 
@@ -109,7 +112,8 @@ public class LoanService {
     }
 
     public List<LoanResponse> findOverdue(){
-        List<Loan> loans = loanRepo.findOverdue();
+        List<Loan> loans = loanRepo.findByStatus(Status.OVERDUE);
+
         if(loans.isEmpty()){
             throw new NotFoundException("Overdue Loans Not Found");
         }
@@ -121,7 +125,7 @@ public class LoanService {
     }
 
     public List<LoanResponse> findActive(){
-        List<Loan> loans = loanRepo.findActive();
+        List<Loan> loans = loanRepo.findByStatus(Status.ACTIVE);
         if(loans.isEmpty()){
             throw new NotFoundException("Active Loans Not Found");
         }
@@ -133,7 +137,8 @@ public class LoanService {
     }
 
     public List<LoanResponse> findReturned(){
-        List<Loan> loans = loanRepo.findReturned();
+        List<Loan> loans = loanRepo.findByStatus(Status.RETURNED);
+
         if(loans.isEmpty()){
             throw new NotFoundException("Returned Loans Not Found");
         }
@@ -149,10 +154,16 @@ public class LoanService {
         Validator.validateInt(loanId, "Loan id");
 
         Loan loan = getLoan(loanId);
+        Book book = loan.getBook();
+
         loanLogic.checkReturned(loan);
 
-        bookRepo.increaseAvailableCopies(loan.getBookId().getId());
-        loanRepo.returnLoan(loanId);
+        book.setAvailableCopies(book.getAvailableCopies() + 1);
+        loan.setStatus(Status.RETURNED);
+        loan.setReturnDate(LocalDate.now());
+
+        bookRepo.save(book);
+        loanRepo.save(loan);
 
         log.info("Returned loan successfully - loanId: {}", loanId);
     }

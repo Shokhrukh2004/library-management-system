@@ -22,7 +22,7 @@ public class LoanBusinessLogic {
     }
 
     private void checkHasOverDue(int memberId){
-        boolean hasOverdue = loanRepo.findByMemberId(memberId)
+        boolean hasOverdue = loanRepo.findByMember_Id(memberId)
                 .stream()
                 .anyMatch(loan -> loan.getStatus() == Status.OVERDUE);
 
@@ -33,7 +33,7 @@ public class LoanBusinessLogic {
     }
 
     private void checkHasBorrowedSameBook(int memberId, int bookId){
-        if(loanRepo.findActiveByMemberAndBook(memberId, bookId).isPresent()){
+        if(loanRepo.findByMember_IdAndBook_IdAndStatus(memberId, bookId, Status.ACTIVE).isPresent()){
             log.warn("Member has already borrowed same book - memberId: {}, bookId: {}", memberId, bookId);
             throw new ConflictException("You already borrowed same book, please return first!");
         }

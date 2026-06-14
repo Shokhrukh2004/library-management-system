@@ -1,33 +1,18 @@
 package org.example.book.repository;
 
 import org.example.book.Book;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
-public interface BookRepository {
-     void save(Book book);
+public interface BookRepository extends JpaRepository<Book, Integer> {
+    List<Book> findByTitleContainingIgnoreCase(String title);
 
-     Optional<Book> findById(int id);
+    List<Book> findByAuthorContainingIgnoreCase(String author);
 
-     List<Book> findAll();
+    Optional<Book> findByIsbn(String isbn);
 
-     List<Book> findByTitle(String title);
-
-     List<Book> findByAuthor(String author);
-
-     Optional<Book> findByIsbn(String isbn);
-
-     void update(Book book);
-
-     void deactivate(int id);
-
-     void activate(int id);
-
-     List<Book> findAllInactive();
-
-     void increaseAvailableCopies(int id);
-
-     void decreaseAvailableCopies(int id);
+    List<Book> findByIsActive(boolean isActive);
 }

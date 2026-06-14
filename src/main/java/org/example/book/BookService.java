@@ -48,7 +48,7 @@ public class BookService {
     }
 
     public List<BookResponse> findAll(){
-        List<Book> books = repo.findAll();
+        List<Book> books = repo.findByIsActive(true);
         if(books.isEmpty()){
             throw new NotFoundException("No books found");
         }
@@ -56,12 +56,11 @@ public class BookService {
         return books.stream()
                 .map(BookParser::toBookResponse)
                 .toList();
-
     }
 
     public List<BookResponse> findByTitle(String title){
         Validator.validateStr(title, "Title");
-        List<Book>  books = repo.findByTitle(title);
+        List<Book>  books = repo.findByTitleContainingIgnoreCase(title);
         if(books.isEmpty()){
             throw new NotFoundException("No books found by title " + title);
         }
@@ -73,7 +72,7 @@ public class BookService {
 
     public List<BookResponse> findByAuthor(String author){
         Validator.validateStr(author, "Author");
-        List<Book> books = repo.findByAuthor(author);
+        List<Book> books = repo.findByAuthorContainingIgnoreCase(author);
         if(books.isEmpty()){
             throw new NotFoundException("No books found by author " + author);
         }
@@ -82,6 +81,19 @@ public class BookService {
                 .map(BookParser::toBookResponse)
                 .toList();
     }
+
+    public List<BookResponse> findAllInactive(){
+        List<Book> books = repo.findByIsActive(false);
+
+        if(books.isEmpty()){
+            throw new NotFoundException("No Inactive books found");
+        }
+
+        return  books.stream()
+                .map(BookParser::toBookResponse)
+                .toList();
+    }
+
 
     public void update(BookUpdateRequest book){
         log.info("updating book - id: {}", book.getId());
@@ -93,7 +105,7 @@ public class BookService {
         book1.setTotalCopies(book.getTotalCopies());
         book1.setAvailableCopies(book.getAvailableCopies());
 
-        repo.update(book1);
+        repo.save(book1);
         log.info("updated book successfully - id: {}", book.getId());
     }
 
@@ -105,7 +117,8 @@ public class BookService {
         isBookActiveCheck(book);
         isBookLoanedCheck(id);
 
-        repo.deactivate(id);
+        book.setActive(false);
+        repo.save(book);
         log.info("deactivated book successfully - id: {}", id);
     }
 
@@ -116,20 +129,11 @@ public class BookService {
         Book book = getBookIfExist(id);
         isBookNotActiveCheck(book);
 
-        repo.activate(id);
+        book.setActive(true);
+        repo.save(book);
         log.info("activated book successfully - id: {}", id);
     }
 
-    public List<BookResponse> findAllInactive(){
-        List<Book> books = repo.findAllInactive();
-        if(books.isEmpty()){
-            throw new NotFoundException("No Inactive books found");
-        }
-
-        return  books.stream()
-                .map(BookParser::toBookResponse)
-                .toList();
-    }
 
 
 
@@ -142,7 +146,7 @@ public class BookService {
     }
 
     private void isBookLoanedCheck(int bookId) {
-        boolean isBorrowed = loanRepo.findByBookId(bookId)
+        boolean isBorrowed = loanRepo.findByBook_Id(bookId)
                 .stream()
                 .anyMatch(loan -> loan.getStatus().equals(Status.ACTIVE) ||
                         loan.getStatus().equals(Status.OVERDUE));

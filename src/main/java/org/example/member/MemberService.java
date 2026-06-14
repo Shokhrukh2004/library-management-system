@@ -48,11 +48,9 @@ public class MemberService {
 
     public List<MemberResponse> findByName(String name){
         Validator.validateStr(name, "Name");
-        List<Member> members = repo.findByName(name);
+        List<Member> members = repo.findByNameContainingIgnoreCase(name);
 
-        if(members.isEmpty()){
-            throw new NotFoundException("Member not found with name: " + name);
-        }
+        isEmptyCheck(members, "Name " + name);
 
         return members.stream()
                 .map(MemberParser::toResponseFromMember)
@@ -71,10 +69,9 @@ public class MemberService {
     }
 
     public List<MemberResponse> findAll(){
-        List<Member> members = repo.findAll();
-        if(members.isEmpty()){
-            throw new NotFoundException("No Members Found");
-        }
+        List<Member> members = repo.findByIsActive(true);
+
+        isEmptyCheck(members, "");
 
         return members.stream()
                 .map(MemberParser::toResponseFromMember)
@@ -91,7 +88,7 @@ public class MemberService {
         updateMember.setName(member.getName());
         updateMember.setEmail(member.getEmail());
 
-        repo.update(updateMember);
+        repo.save(updateMember);
         log.info("Member updated successfully - memberId: {}", member.getId());
     }
 
@@ -104,7 +101,8 @@ public class MemberService {
         isMemberActiveCheck(member);
         isMemberLoanedCheck(id);
 
-        repo.deactivate(id);
+        member.setActive(false);
+        repo.save(member);
         log.info("Member deactivated successfully - memberId: {}", id);
     }
 
@@ -115,21 +113,20 @@ public class MemberService {
         Member member = getMemberIfExist(id);
         isMemberNotActiveCheck(member);
 
-        repo.activate(id);
+        member.setActive(true);
+        repo.save(member);
         log.info("Member activated successfully - memberId: {}", id);
     }
 
     public List<MemberResponse> findAllInactive(){
-        List<Member> members = repo.findInactiveMembers();
-        if(members.isEmpty()){
-            throw new NotFoundException("Inactive Members not found");
-        }
+        List<Member> members = repo.findByIsActive(false);
+
+        isEmptyCheck(members, "With Status Inactive");
 
         return members.stream()
                 .map(MemberParser::toResponseFromMember)
                 .toList();
     }
-
 
 
     private void emailDuplicateCheck(String email){
@@ -140,7 +137,7 @@ public class MemberService {
     }
 
     private void isMemberLoanedCheck(int id){
-        boolean isLoaned = loanRepo.findByMemberId(id)
+        boolean isLoaned = loanRepo.findByMember_Id(id)
                 .stream()
                 .anyMatch(loan -> loan.getStatus().equals(Status.ACTIVE) ||
                         loan.getStatus().equals(Status.OVERDUE));
@@ -172,7 +169,7 @@ public class MemberService {
                 });
     }
 
-    private static void validateEmail(String value) {
+    private void validateEmail(String value) {
         int atIndex = value.indexOf("@");
 
         if (atIndex <= 0 || atIndex == value.length() - 1) {
@@ -183,6 +180,12 @@ public class MemberService {
 
         if (!domain.contains(".") || domain.startsWith(".") || domain.endsWith(".")) {
             throw new ValidationException("Email domain must be valid gmail.com");
+        }
+    }
+
+    private <T> void isEmptyCheck(List<T> items, String fieldName){
+        if(items.isEmpty()){
+            throw new NotFoundException("Members not found: " + fieldName);
         }
     }
 }

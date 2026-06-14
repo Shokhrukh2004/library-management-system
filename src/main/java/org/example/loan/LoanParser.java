@@ -10,11 +10,11 @@ import java.time.LocalDate;
 
 public class LoanParser {
 
-    public static Loan toLoanFromCreateRequest(LoanCreateRequest request){
+    public static Loan toLoanFromCreateRequest(LoanCreateRequest request, Member member, Book book) {
         return new Loan(
                 0,
-                request.getMemberId(),
-                request.getBookId(),
+                member,
+                book,
                 LocalDate.now(),
                 LocalDate.now().plusDays(10),
                 null,
@@ -25,8 +25,8 @@ public class LoanParser {
     public static LoanResponse toLoanResponseFromLoan(Loan loan){
         return new LoanResponse(
                 loan.getId(),
-                loan.getMemberId(),
-                loan.getBookId(),
+                loan.getMember().getId(),
+                loan.getBook().getId(),
                 loan.getBorrowDate(),
                 loan.getDueDate(),
                 loan.getReturnDate(),
