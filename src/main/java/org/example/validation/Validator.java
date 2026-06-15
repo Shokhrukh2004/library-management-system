@@ -19,4 +19,18 @@ public class Validator {
             throw new ValidationException(field + " must have at least 3 characters");
         }
     }
+
+    public static void validateEmail(String value) {
+        int atIndex = value.indexOf("@");
+
+        if (atIndex <= 0 || atIndex == value.length() - 1) {
+            throw new ValidationException("Email must have content before and after @.");
+        }
+
+        String domain = value.substring(atIndex + 1);
+
+        if (!domain.contains(".") || domain.startsWith(".") || domain.endsWith(".")) {
+            throw new ValidationException("Email domain must be valid gmail.com");
+        }
+    }
 }

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 public class LoanParser {
 
-    public static Loan toLoanFromCreateRequest(LoanCreateRequest request, Member member, Book book) {
+    public static Loan toLoanFromCreateRequest(Member member, Book book) {
         return new Loan(
                 0,
                 member,

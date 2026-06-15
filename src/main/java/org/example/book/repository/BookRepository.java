@@ -1,6 +1,7 @@
 package org.example.book.repository;
 
 import org.example.book.Book;
+import org.example.loan.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.swing.text.html.Option;

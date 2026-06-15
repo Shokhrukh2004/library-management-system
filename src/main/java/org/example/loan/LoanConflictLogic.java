@@ -1,23 +1,21 @@
 package org.example.loan;
 
 import org.example.book.Book;
-import org.example.book.repository.BookRepository;
 import org.example.exception.ConflictException;
 import org.example.loan.enums.Status;
 import org.example.loan.repository.LoanRepository;
 import org.example.member.Member;
-import org.example.member.repository.MemberRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LoanBusinessLogic {
+public class LoanConflictLogic {
 
-    private final static Logger log =  LoggerFactory.getLogger(LoanBusinessLogic.class);
+    private final static Logger log =  LoggerFactory.getLogger(LoanConflictLogic.class);
     private final LoanRepository loanRepo;
 
-    public LoanBusinessLogic(LoanRepository loanRepo) {
+    public LoanConflictLogic(LoanRepository loanRepo) {
         this.loanRepo = loanRepo;
     }
 

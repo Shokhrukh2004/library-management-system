@@ -16,4 +16,8 @@ public interface LoanRepository extends JpaRepository<Loan, Integer> {
     Optional<Loan> findByMember_IdAndBook_IdAndStatus(int memberId, int bookId, Status status);
 
     List<Loan> findByStatus(Status status);
+
+    boolean existsByBook_IdAndStatus(int bookId, Status status);
+
+    boolean existsByMember_IdAndStatus(int memberId, Status status);
 }
