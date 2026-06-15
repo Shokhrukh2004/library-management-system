@@ -148,3 +148,71 @@ Need more flexibility with validation rules? Learn more: https://rd.gt/3AbJUZE
 17:29:32 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
 17:29:32 INFO  org.example.Main - Started Main in 1.461 seconds (process running for 1.667)
 17:29:40 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+17:46:40 INFO  org.example.book.BookService - activating book - id: 1
+17:46:40 INFO  org.example.book.BookService - activated book successfully - id: 1
+17:47:08 INFO  org.example.book.BookService - activating book - id: 1
+17:47:08 INFO  org.example.book.BookService - activated book successfully - id: 1
+17:47:18 INFO  org.example.book.BookService - activating book - id: 1
+17:47:18 INFO  org.example.book.BookService - activated book successfully - id: 1
+17:51:16 INFO  org.example.book.BookService - activating book - id: 1
+17:51:42 INFO  org.example.book.BookService - activating book - id: 1
+17:53:25 INFO  org.example.book.BookService - activating book - id: 1
+17:53:25 WARN  org.example.book.BookService - Book not found - id: 1
+17:53:34 INFO  org.example.book.BookService - activating book - id: 1
+17:53:35 WARN  org.example.book.BookService - Book not found - id: 1
+17:54:58 INFO  org.example.book.BookService - activating book - id: -1
+17:58:00 INFO  org.example.book.BookService - deactivating book - id: 1
+17:58:00 INFO  org.example.book.BookService - deactivated book successfully - id: 1
+17:59:59 INFO  org.example.book.BookService - deactivating book - id: 1
+18:01:37 INFO  org.example.book.BookService - deactivating book - id: 1
+18:01:49 INFO  org.example.book.BookService - deactivating book - id: 1
+18:02:24 INFO  org.example.book.BookService - deactivating book - id: 1
+18:03:47 INFO  org.example.book.BookService - deactivating book - id: 1
+18:03:47 WARN  org.example.book.BookService - Book not found - id: 1
+18:04:00 INFO  org.example.book.BookService - deactivating book - id: 1
+18:04:00 WARN  org.example.book.BookService - Book not found - id: 1
+18:05:28 INFO  org.example.book.BookService - deactivating book - id: 1
+18:05:28 WARN  org.example.book.BookService - Book not found - id: 1
+18:07:07 INFO  org.example.book.BookService - deactivating book - id: -1
+18:07:26 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+18:07:26 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+18:13:23 INFO  org.example.book.BookService - activating book - id: 1
+18:13:23 INFO  org.example.book.BookService - activated book successfully - id: 1
+18:13:23 INFO  org.example.book.BookService - deactivating book - id: 1
+18:13:23 INFO  org.example.book.BookService - activating book - id: -1
+18:13:23 INFO  org.example.book.BookService - activating book - id: 1
+18:13:23 INFO  org.example.book.BookService - deactivating book - id: 1
+18:13:23 INFO  org.example.book.BookService - deactivated book successfully - id: 1
+18:13:23 INFO  org.example.book.BookService - deactivating book - id: 1
+18:13:23 WARN  org.example.book.BookService - Book not found - id: 1
+18:13:23 INFO  org.example.book.BookService - deactivating book - id: -1
+18:13:23 INFO  org.example.book.BookService - deactivating book - id: 1
+18:13:23 INFO  org.example.book.BookService - activating book - id: 1
+18:13:23 WARN  org.example.book.BookService - Book not found - id: 1
+18:21:14 INFO  org.example.book.BookService - Adding new book - isbn: abc123
+18:21:14 INFO  org.example.book.BookService - Added new book successfully - isbn: abc123
+18:24:01 INFO  org.example.book.BookService - Adding new book - isbn: abc223
+18:35:07 INFO  org.example.book.BookService - updating book - id: 1
+18:35:07 INFO  org.example.book.BookService - updated book successfully - id: 1
+18:36:51 INFO  org.example.book.BookService - updating book - id: 1
+18:38:26 INFO  org.example.book.BookService - updating book - id: 1
+18:38:26 WARN  org.example.book.BookService - Book not found - id: 1
+18:41:09 INFO  org.example.book.BookService - updating book - id: 1
+18:51:42 INFO  org.example.book.BookService - Adding new book - isbn: abc123
+18:51:42 INFO  org.example.book.BookService - updating book - id: 1
+18:51:42 INFO  org.example.book.BookService - updating book - id: 1
+18:51:42 WARN  org.example.book.BookService - Book not found - id: 1
+18:51:42 INFO  org.example.book.BookService - updating book - id: 1
+18:51:42 INFO  org.example.book.BookService - updated book successfully - id: 1
+18:51:42 INFO  org.example.book.BookService - Adding new book - isbn: abc123
+18:51:42 INFO  org.example.book.BookService - Added new book successfully - isbn: abc123
+18:51:42 INFO  org.example.book.BookService - updating book - id: 1
+19:01:52 WARN  org.example.book.BookConflictLogic - Book with ISBN isbn123 already exists
+19:07:51 WARN  org.example.book.BookConflictLogic - Book is already loaned - id: 1
+19:10:37 WARN  org.example.book.BookConflictLogic - Book is not active - id: 1
+19:11:57 WARN  org.example.book.BookConflictLogic - Book is not active - id: 1
+19:12:18 WARN  org.example.book.BookConflictLogic - Book is active already - id: 1
+19:16:51 WARN  org.example.book.BookConflictLogic - Book with ISBN isbn123 already exists
+19:16:51 WARN  org.example.book.BookConflictLogic - Book is not active - id: 1
+19:16:51 WARN  org.example.book.BookConflictLogic - Book is already loaned - id: 1
+19:16:51 WARN  org.example.book.BookConflictLogic - Book is active already - id: 1
