@@ -55,7 +55,7 @@ public class MemberService {
     }
 
     public MemberResponse findByEmail(String email){
-        Validator.validateStr(email, "Email");
+        Validator.validateStr(email, "Email " + email);
         Validator.validateEmail(email);
 
         Member member = repo.findByEmail(email)

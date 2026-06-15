@@ -60,7 +60,7 @@ public class BookService {
         Validator.validateStr(title, "Title");
         List<Book>  books = repo.findByTitleContainingIgnoreCase(title);
 
-        isEmptyCheck(books, "with title" + title);
+        isEmptyCheck(books, "with title " + title);
 
         return books.stream()
                 .map(BookParser::toBookResponse)
@@ -71,7 +71,7 @@ public class BookService {
         Validator.validateStr(author, "Author");
         List<Book> books = repo.findByAuthorContainingIgnoreCase(author);
 
-        isEmptyCheck(books, "with author" + author);
+        isEmptyCheck(books, "with author " + author);
 
         return books.stream()
                 .map(BookParser::toBookResponse)
