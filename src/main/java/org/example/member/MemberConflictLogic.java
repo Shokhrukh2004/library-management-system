@@ -29,9 +29,8 @@ public class MemberConflictLogic {
 
     public void isMemberLoanedCheck(int id){
         boolean isActive = loanRepo.existsByMember_IdAndStatus(id, Status.ACTIVE);
-        boolean isOverdue = loanRepo.existsByMember_IdAndStatus(id, Status.OVERDUE);
 
-        if(isActive || isOverdue){
+        if(isActive){
             log.warn("Member has active loan - memberId: {}", id);
             throw new ConflictException("The member with id "+ id + " has active loan");
         }

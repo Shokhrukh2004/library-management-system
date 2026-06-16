@@ -38,3 +38,50 @@
 18:14:36 WARN  o.example.member.MemberConflictLogic - Member is active already - memberId: 1
 18:14:36 WARN  o.example.member.MemberConflictLogic - Member has active loan - memberId: 1
 18:14:36 WARN  o.example.member.MemberConflictLogic - Email already exists - email: email
+19:07:02 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:07:02 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
+19:07:15 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:07:15 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
+19:09:19 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:09:19 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
+19:10:17 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:10:17 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
+19:13:40 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:13:40 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
+19:14:55 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:14:55 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
+19:17:40 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:19:23 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:19:23 WARN  org.example.loan.LoanService - Member not found with id: 1
+19:19:35 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:19:35 WARN  org.example.loan.LoanService - Member not found with id: 1
+19:20:25 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:20:25 WARN  org.example.loan.LoanService - Book not found with id 1
+19:29:44 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+19:29:44 INFO  org.example.loan.LoanService - Returned loan successfully - loanId: 1
+19:31:46 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+19:33:27 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+19:33:27 WARN  org.example.loan.LoanService - Loan not found with loanId: 1
+19:34:53 INFO  org.example.loan.LoanService - Returning loan - loanId: -1
+19:35:54 INFO  org.example.loan.LoanService - Returning loan - loanId: -1
+19:35:54 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+19:35:54 INFO  org.example.loan.LoanService - Returned loan successfully - loanId: 1
+19:35:54 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:35:54 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
+19:35:54 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:35:54 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+19:35:54 WARN  org.example.loan.LoanService - Loan not found with loanId: 1
+19:35:54 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
+19:35:54 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:35:54 WARN  org.example.loan.LoanService - Book not found with id 1
+19:35:54 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
+19:35:54 WARN  org.example.loan.LoanService - Member not found with id: 1
+20:04:14 WARN  org.example.loan.LoanConflictLogic - Member has already borrowed same book - memberId: 1, bookId: 1
+20:07:08 WARN  org.example.loan.LoanConflictLogic - Book has no available copies - bookId: 1
+20:07:32 WARN  org.example.loan.LoanConflictLogic - Book has no available copies - bookId: 1
+20:07:52 WARN  org.example.loan.LoanConflictLogic - Book has no available copies - bookId: 1
+20:07:52 WARN  org.example.loan.LoanConflictLogic - Book has no available copies - bookId: 1
+20:09:36 WARN  org.example.loan.LoanConflictLogic - Member is not active - memberId: 1
+20:12:05 WARN  org.example.loan.LoanConflictLogic - Book is not active - bookId: 1
+20:16:45 WARN  org.example.loan.LoanConflictLogic - Member has overdue already - memberId: 1
+20:19:53 WARN  org.example.loan.LoanConflictLogic - Loan has already been returned - loanId: 1

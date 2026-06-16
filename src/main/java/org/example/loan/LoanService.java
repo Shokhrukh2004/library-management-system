@@ -158,7 +158,6 @@ public class LoanService {
 
         bookRepo.save(book);
         loanRepo.save(loan);
-
         log.info("Returned loan successfully - loanId: {}", loanId);
     }
 
