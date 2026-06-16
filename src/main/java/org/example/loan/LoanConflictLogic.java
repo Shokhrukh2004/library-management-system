@@ -22,7 +22,7 @@ public class LoanConflictLogic {
     private void checkHasOverDue(int memberId){
         boolean hasOverdue = loanRepo.findByMember_Id(memberId)
                 .stream()
-                .anyMatch(loan -> loan.getStatus() == Status.OVERDUE);
+                .anyMatch(loan -> loan.getEffectiveStatus() == Status.OVERDUE);
 
         if (hasOverdue){
             log.warn("Member has overdue already - memberId: {}", memberId);

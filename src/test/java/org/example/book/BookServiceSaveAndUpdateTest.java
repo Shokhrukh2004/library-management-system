@@ -32,7 +32,7 @@ public class BookServiceSaveAndUpdateTest {
     //      save method test cases
     @Test
     void save_validRequest_bookIsSaved(){
-        BookCreateRequest request = getCreateRequest();
+        BookCreateRequest request = BookUtil.getCreateRequest();
 
         doNothing()
                 .when(logic)
@@ -57,7 +57,7 @@ public class BookServiceSaveAndUpdateTest {
 
     @Test
     void save_duplicateIsbn_throwsConflictException(){
-        BookCreateRequest request = getCreateRequest();
+        BookCreateRequest request = BookUtil.getCreateRequest();
 
         doThrow(ConflictException.class)
                 .when(logic)
@@ -74,8 +74,8 @@ public class BookServiceSaveAndUpdateTest {
     //      update method test cases
     @Test
     void update_validRequest_bookIsUpdated(){
-        BookUpdateRequest request = getUpdateRequest(true);
-        Book book = getBook(true);
+        BookUpdateRequest request = BookUtil.getUpdateRequest(true);
+        Book book = BookUtil.getBook(true);
 
         doNothing()
                 .when(logic)
@@ -98,8 +98,8 @@ public class BookServiceSaveAndUpdateTest {
 
     @Test
     void update_bookIsNotActive_throwsConflictException(){
-        BookUpdateRequest request = getUpdateRequest(true);
-        Book book = getBook(false);
+        BookUpdateRequest request = BookUtil.getUpdateRequest(true);
+        Book book = BookUtil.getBook(false);
 
         doNothing()
                 .when(logic)
@@ -120,7 +120,7 @@ public class BookServiceSaveAndUpdateTest {
 
     @Test
     void update_bookDoesNotExist_throwsNotFoundException(){
-        BookUpdateRequest request = getUpdateRequest(true);
+        BookUpdateRequest request = BookUtil.getUpdateRequest(true);
 
         doNothing()
                 .when(logic)
@@ -140,8 +140,8 @@ public class BookServiceSaveAndUpdateTest {
     }
 
     @Test
-    void delete_invalidCopies_throwsConflictException(){
-        BookUpdateRequest request = getUpdateRequest(false);
+    void update_invalidCopies_throwsConflictException(){
+        BookUpdateRequest request = BookUtil.getUpdateRequest(false);
         doThrow(ConflictException.class)
                 .when(logic)
                 .validateCopies(request.getTotalCopies(), request.getAvailableCopies());
@@ -157,35 +157,5 @@ public class BookServiceSaveAndUpdateTest {
 
         verify(repo, never())
                 .save(any(Book.class));
-    }
-
-    //      private util methods
-    private Book getBook(boolean isActive){
-        return new Book(
-                1,
-                "Clean Code",
-                "John Doe",
-                "abc123",
-                10,
-                10,
-                isActive
-        );
-    }
-
-    private BookUpdateRequest getUpdateRequest(boolean isValid){
-        return new BookUpdateRequest(
-                1,
-                20,
-                isValid ? 20 : 25
-        );
-    }
-
-    private BookCreateRequest getCreateRequest(){
-        return new BookCreateRequest(
-                "Clean Code",
-                "John Doe",
-                "abc123",
-                20
-        );
     }
 }

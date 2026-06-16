@@ -27,9 +27,10 @@ public class BookServiceActivateDeactivateTest {
     @InjectMocks
     BookService service;
 
+    //          activate method test cases
     @Test
     void activate_validRequest_bookIsActivated() {
-        Book book = getBook(false);
+        Book book = BookUtil.getBook(false);
 
         when(repo.findById(1))
                 .thenReturn(Optional.of(book));
@@ -47,7 +48,7 @@ public class BookServiceActivateDeactivateTest {
 
     @Test
     void activate_bookIsActiveAlready_throwsConflictException(){
-        Book book = getBook(true);
+        Book book = BookUtil.getBook(true);
 
         when(repo.findById(1))
                 .thenReturn(Optional.of(book));
@@ -82,9 +83,11 @@ public class BookServiceActivateDeactivateTest {
         verifyNoInteractions(repo);
     }
 
+
+    //          deactivate method test cases
     @Test
     void deactivate_validRequest_bookIsDeactivated() {
-        Book book = getBook(true);
+        Book book = BookUtil.getBook(true);
 
         when(repo.findById(1))
                 .thenReturn(Optional.of(book));
@@ -104,7 +107,7 @@ public class BookServiceActivateDeactivateTest {
 
     @Test
     void deactivate_bookIsLoaned_throwsConflictException(){
-        Book book = getBook(true);
+        Book book = BookUtil.getBook(true);
 
         when(repo.findById(1))
                 .thenReturn(Optional.of(book));
@@ -125,7 +128,7 @@ public class BookServiceActivateDeactivateTest {
 
     @Test
     void deactivate_bookIsNotActive_throwsConflictException(){
-        Book book = getBook(false);
+        Book book = BookUtil.getBook(false);
 
         when(repo.findById(1))
                 .thenReturn(Optional.of(book));
@@ -163,16 +166,5 @@ public class BookServiceActivateDeactivateTest {
 
         verifyNoInteractions(logic);
         verifyNoInteractions(repo);
-    }
-
-    private Book getBook(boolean isActive){
-        return new Book(1,
-                "Clean Code",
-                "John Doe",
-                "abc124",
-                20,
-                20,
-                isActive
-        );
     }
 }

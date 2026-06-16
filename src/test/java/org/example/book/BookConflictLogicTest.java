@@ -75,7 +75,7 @@ public class BookConflictLogicTest {
     //      isBookActiveCheck method test cases
     @Test
     void isBookActiveCheck_bookActive_doesNotThrow(){
-        Book book = getBook(true);
+        Book book = BookUtil.getBook(true);
 
         assertDoesNotThrow(
                 () -> logic.isBookActiveCheck(book));
@@ -83,7 +83,7 @@ public class BookConflictLogicTest {
 
     @Test
     void isBookActiveCheck_bookNotActive_throwsConflictException(){
-        Book book = getBook(false);
+        Book book = BookUtil.getBook(false);
 
         assertThrows(ConflictException.class,
                 () -> logic.isBookActiveCheck(book));
@@ -93,7 +93,7 @@ public class BookConflictLogicTest {
     //      isBookNotActiveCheck method test cases
     @Test
     void isBookNotActiveCheck_bookNotActive_doesNotThrow(){
-        Book book = getBook(false);
+        Book book = BookUtil.getBook(false);
 
         assertDoesNotThrow(
                 () -> logic.isBookNotActiveCheck(book));
@@ -101,7 +101,7 @@ public class BookConflictLogicTest {
 
     @Test
     void isBookNotActiveCheck_bookActive_throwsConflictException(){
-        Book book = getBook(true);
+        Book book = BookUtil.getBook(true);
 
         assertThrows(ConflictException.class,
                 () -> logic.isBookNotActiveCheck(book));
@@ -118,20 +118,5 @@ public class BookConflictLogicTest {
     void validateTotalCopies_invalidCopies_throwsConflictException(){
         assertThrows(ConflictException.class,
                 () -> logic.validateCopies(20, 25));
-    }
-
-
-
-    //      private util methods
-    private Book getBook(boolean isActive){
-        return new Book(
-                1,
-                "clean code",
-                "John doe",
-                "abc123",
-                20,
-                20,
-                isActive
-        );
     }
 }

@@ -42,4 +42,13 @@ public class Loan {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
+
+    @Transient
+    public Status getEffectiveStatus() {
+        if(status == Status.ACTIVE && dueDate.isBefore(LocalDate.now())) {
+            return Status.RETURNED;
+        }
+
+        return status;
+    }
 }

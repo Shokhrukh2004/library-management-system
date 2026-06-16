@@ -30,7 +30,7 @@ public class LoanParser {
                 loan.getBorrowDate(),
                 loan.getDueDate(),
                 loan.getReturnDate(),
-                loan.getStatus()
+                loan.getEffectiveStatus()
         );
     }
 }

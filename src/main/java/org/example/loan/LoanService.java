@@ -108,7 +108,10 @@ public class LoanService {
     }
 
     public List<LoanResponse> findOverdue(){
-        List<Loan> loans = loanRepo.findByStatus(Status.OVERDUE);
+        List<Loan> loans = loanRepo.findByStatus(Status.ACTIVE)
+                .stream()
+                .filter(loan -> loan.getEffectiveStatus() == Status.OVERDUE)
+                .toList();
 
         isEmptyCheck(loans, "with status: OVERDUE");
 
