@@ -5,6 +5,7 @@ import org.example.book.repository.BookRepository;
 import org.example.exception.NotFoundException;
 import org.example.loan.dto.LoanCreateRequest;
 import org.example.loan.dto.LoanResponse;
+import org.example.loan.enums.Status;
 import org.example.loan.repository.LoanRepository;
 import org.example.member.Member;
 import org.example.member.repository.MemberRepository;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -25,12 +27,12 @@ public class LoanService {
     private final BookRepository bookRepo;
     private final MemberRepository memberRepo;
     private final LoanRepository loanRepo;
-    private final LoanBusinessLogic loanLogic;
+    private final LoanConflictLogic loanLogic;
 
     public LoanService(BookRepository bookRepo,
                        MemberRepository memberRepo,
                        LoanRepository repo,
-                       LoanBusinessLogic loanLogic) {
+                       LoanConflictLogic loanLogic) {
         this.bookRepo = bookRepo;
         this.memberRepo = memberRepo;
         this.loanRepo = repo;
@@ -41,29 +43,29 @@ public class LoanService {
     public void save(LoanCreateRequest loanRequest) {
         log.info("Creating loan - memberId: {}, bookId: {}", loanRequest.getMemberId(), loanRequest.getBookId());
 
-        Book book = getBook(loanRequest.getBookId());
-        Member member = getMember(loanRequest.getMemberId());
+        Book book = getBookIfExist(loanRequest.getBookId());
+        Member member = getMemberIfExist(loanRequest.getMemberId());
 
         loanLogic.checkCreateRequest(member, book);
+        book.setAvailableCopies(book.getAvailableCopies() - 1);
 
-        bookRepo.decreaseAvailableCopies(book.getId());
-        loanRepo.save(LoanParser.toLoanFromCreateRequest(loanRequest));
+        bookRepo.save(book);
+        loanRepo.save(LoanParser.toLoanFromCreateRequest(member, book));
         log.info("Loan created successfully - bookId: {}, memberId: {}", loanRequest.getBookId(), loanRequest.getMemberId());
     }
 
     public LoanResponse findById(int id){
         Validator.validateInt(id, "Id");
-        Loan loan = loanRepo.findById(id).orElseThrow(() -> new NotFoundException("Book not found with id " + id));
+        Loan loan = getLoanIfExist(id);
 
         return LoanParser.toLoanResponseFromLoan(loan);
     }
 
     public List<LoanResponse> findByMemberId(int memberId){
         Validator.validateInt(memberId, "Member Id");
-        List<Loan> loans = loanRepo.findByMemberId(memberId);
-        if(loans.isEmpty()){
-            throw new NotFoundException("Loan Not Found with member ID: " + memberId);
-        }
+        List<Loan> loans = loanRepo.findByMember_Id(memberId);
+
+        isEmptyCheck(loans, "with member Id: " + memberId);
 
         return loans
                 .stream()
@@ -73,11 +75,9 @@ public class LoanService {
 
     public List<LoanResponse> findByBookId(int bookId){
         Validator.validateInt(bookId, "Book id");
-        List<Loan> loans = loanRepo.findByBookId(bookId);
+        List<Loan> loans = loanRepo.findByBook_Id(bookId);
 
-        if(loans.isEmpty()){
-            throw new NotFoundException("Loan Not Found with book ID: " + bookId);
-        }
+        isEmptyCheck(loans, "with book Id: " + bookId);
 
         return loans
                 .stream()
@@ -89,7 +89,7 @@ public class LoanService {
         Validator.validateInt(memberId, "Member id");
         Validator.validateInt(bookId, "Book id");
 
-        Loan loan = loanRepo.findActiveByMemberAndBook(memberId, bookId)
+        Loan loan = loanRepo.findByMember_IdAndBook_IdAndStatus(memberId, bookId, Status.ACTIVE)
                 .orElseThrow(() ->
                         new NotFoundException("Loan not found with member id " + memberId + " and book id " + bookId));
 
@@ -98,9 +98,8 @@ public class LoanService {
 
     public List<LoanResponse> findAll(){
         List<Loan> loans = loanRepo.findAll();
-        if(loans.isEmpty()){
-            throw new NotFoundException("Loan Not Found");
-        }
+
+        isEmptyCheck(loans, "");
 
         return loans
                 .stream()
@@ -109,10 +108,12 @@ public class LoanService {
     }
 
     public List<LoanResponse> findOverdue(){
-        List<Loan> loans = loanRepo.findOverdue();
-        if(loans.isEmpty()){
-            throw new NotFoundException("Overdue Loans Not Found");
-        }
+        List<Loan> loans = loanRepo.findByStatus(Status.ACTIVE)
+                .stream()
+                .filter(loan -> loan.getEffectiveStatus() == Status.OVERDUE)
+                .toList();
+
+        isEmptyCheck(loans, "with status: OVERDUE");
 
         return loans
                 .stream()
@@ -121,10 +122,9 @@ public class LoanService {
     }
 
     public List<LoanResponse> findActive(){
-        List<Loan> loans = loanRepo.findActive();
-        if(loans.isEmpty()){
-            throw new NotFoundException("Active Loans Not Found");
-        }
+        List<Loan> loans = loanRepo.findByStatus(Status.ACTIVE);
+
+        isEmptyCheck(loans, "with status: ACTIVE");
 
         return loans
                 .stream()
@@ -133,10 +133,9 @@ public class LoanService {
     }
 
     public List<LoanResponse> findReturned(){
-        List<Loan> loans = loanRepo.findReturned();
-        if(loans.isEmpty()){
-            throw new NotFoundException("Returned Loans Not Found");
-        }
+        List<Loan> loans = loanRepo.findByStatus(Status.RETURNED);
+
+        isEmptyCheck(loans, "with status: RETURNED");
 
         return loans.stream()
                 .map(LoanParser::toLoanResponseFromLoan)
@@ -148,19 +147,22 @@ public class LoanService {
         log.info("Returning loan - loanId: {}", loanId);
         Validator.validateInt(loanId, "Loan id");
 
-        Loan loan = getLoan(loanId);
+        Loan loan = getLoanIfExist(loanId);
+        Book book = loan.getBook();
+
         loanLogic.checkReturned(loan);
 
-        bookRepo.increaseAvailableCopies(loan.getBookId());
-        loanRepo.returnLoan(loanId);
+        book.setAvailableCopies(book.getAvailableCopies() + 1);
+        loan.setStatus(Status.RETURNED);
+        loan.setReturnDate(LocalDate.now());
 
+        bookRepo.save(book);
+        loanRepo.save(loan);
         log.info("Returned loan successfully - loanId: {}", loanId);
     }
 
 
-
-
-    private Book getBook(int bookId){
+    private Book getBookIfExist(int bookId){
         return bookRepo.findById(bookId).orElseThrow(() -> {
             log.warn("Book not found with id {}", bookId);
             return new NotFoundException("Book not found with id: " + bookId);
@@ -168,7 +170,7 @@ public class LoanService {
 
     }
 
-    private Member getMember(int memberId){
+    private Member getMemberIfExist(int memberId){
         return memberRepo.findById(memberId).orElseThrow(() ->{
             log.warn("Member not found with id: {}", memberId);
             return new NotFoundException("Member not found with id: " + memberId);
@@ -176,10 +178,16 @@ public class LoanService {
 
     }
 
-    private Loan getLoan(int loanId){
+    private Loan getLoanIfExist(int loanId){
         return loanRepo.findById(loanId).orElseThrow(() -> {
             log.warn("Loan not found with loanId: {}", loanId);
             return new NotFoundException("Loan not found with loanId: " + loanId);
         });
+    }
+
+    private <T> void isEmptyCheck(List<T> items, String field){
+        if(items.isEmpty()){
+            throw new NotFoundException("Loan Not Found " + field);
+        }
     }
 }

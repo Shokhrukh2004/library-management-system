@@ -4,122 +4,167 @@ import org.example.book.repository.BookRepository;
 import org.example.exception.ConflictException;
 import org.example.exception.NotFoundException;
 import org.example.exception.ValidationException;
-import org.example.loan.Loan;
-import org.example.loan.enums.Status;
-import org.example.loan.repository.LoanRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
 public class BookServiceActivateDeactivateTest {
-    @Mock
-    BookRepository bookRepo;
 
     @Mock
-    LoanRepository loanRepo;
+    BookRepository repo;
+
+    @Mock
+    BookConflictLogic logic;
 
     @InjectMocks
-    BookService bookService;
+    BookService service;
 
-    //       Book activate method test cases
+    //          activate method test cases
     @Test
-    void activate_validRequest_bookIsActivated(){
-        Book book = new Book(1, "Clean Code", "John Doe", "abc124", 20, 20, false);
-        when(bookRepo.findById(1)).thenReturn(Optional.of(book));
+    void activate_validRequest_bookIsActivated() {
+        Book book = BookUtil.getBook(false);
 
-        bookService.activate(1);
+        when(repo.findById(1))
+                .thenReturn(Optional.of(book));
 
-        verify(bookRepo).activate(book.getId());
+        doNothing()
+                .when(logic)
+                .isBookNotActiveCheck(book);
+
+        service.activate(book.getId());
+
+        assertTrue(book.isActive());
+
+        verify(repo).save(book);
+    }
+
+    @Test
+    void activate_bookIsActiveAlready_throwsConflictException(){
+        Book book = BookUtil.getBook(true);
+
+        when(repo.findById(1))
+                .thenReturn(Optional.of(book));
+
+        doThrow(ConflictException.class)
+                .when(logic).isBookNotActiveCheck(book);
+
+        assertThrows(ConflictException.class,
+                () -> service.activate(book.getId()));
+
+        verify(repo, never()).save(book);
     }
 
     @Test
     void activate_bookDoesNotExist_throwsNotFoundException(){
-        when(bookRepo.findById(1)).thenReturn(Optional.empty());
+        when(repo.findById(1))
+                .thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> bookService.activate(1));
+        assertThrows(NotFoundException.class,
+                () -> service.activate(1));
 
-        verify(bookRepo, never()).activate(anyInt());
-    }
-
-    @Test
-    void activate_alreadyActiveBook_throwsConflictException(){
-        Book book = new Book(1, "Clean Code", "John Doe", "abc124", 20, 20, true);
-        when(bookRepo.findById(1)).thenReturn(Optional.of(book));
-
-        assertThrows(ConflictException.class, () -> bookService.activate(1));
-
-        verify(bookRepo, never()).activate(anyInt());
+        verifyNoInteractions(logic);
+        verify(repo, never()).save(any());
     }
 
     @Test
     void activate_invalidId_throwsValidationException(){
-        assertThrows(ValidationException.class, () -> bookService.activate(-1));
+        assertThrows(ValidationException.class,
+                () -> service.activate(-1));
 
-        verify(bookRepo, never()).activate(anyInt());
+        verifyNoInteractions(logic);
+        verifyNoInteractions(repo);
     }
 
 
-    //       Book deactivate method test cases
+    //          deactivate method test cases
     @Test
-    void deactivate_validRequest_bookIsDeactivated(){
-        Book book = new Book(1,  "Clean Code", "John Doe", "abc124", 20, 20, true);
+    void deactivate_validRequest_bookIsDeactivated() {
+        Book book = BookUtil.getBook(true);
 
-        when(bookRepo.findById(1)).thenReturn(Optional.of(book));
-        when(loanRepo.findByBookId(1)).thenReturn(List.of());
+        when(repo.findById(1))
+                .thenReturn(Optional.of(book));
 
-        bookService.deactivate(1);
+        doNothing().when(logic)
+                .isBookActiveCheck(book);
 
-        verify(bookRepo).deactivate(book.getId());
+        doNothing()
+                .when(logic)
+                .isBookLoanedCheck(book.getId());
+
+        service.deactivate(1);
+
+        assertFalse(book.isActive());
+        verify(repo).save(book);
+    }
+
+    @Test
+    void deactivate_bookIsLoaned_throwsConflictException(){
+        Book book = BookUtil.getBook(true);
+
+        when(repo.findById(1))
+                .thenReturn(Optional.of(book));
+
+        doNothing()
+                .when(logic)
+                .isBookActiveCheck(book);
+
+        doThrow(ConflictException.class)
+                .when(logic)
+                .isBookLoanedCheck(book.getId());
+
+        assertThrows(ConflictException.class,
+                () -> service.deactivate(1));
+
+        verify(repo, never()).save(book);
+    }
+
+    @Test
+    void deactivate_bookIsNotActive_throwsConflictException(){
+        Book book = BookUtil.getBook(false);
+
+        when(repo.findById(1))
+                .thenReturn(Optional.of(book));
+
+        doThrow(ConflictException.class)
+                .when(logic).isBookActiveCheck(book);
+
+        assertThrows(ConflictException.class,
+                () -> service.deactivate(1));
+
+        verify(logic, never())
+                .isBookLoanedCheck(book.getId());
+
+        verify(repo, never()).save(book);
     }
 
     @Test
     void deactivate_bookDoesNotExist_throwsNotFoundException(){
-        when(bookRepo.findById(1)).thenReturn(Optional.empty());
+        when(repo.findById(1))
+                .thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> bookService.deactivate(1));
+        assertThrows(NotFoundException.class,
+                () -> service.deactivate(1));
 
-        verify(bookRepo, never()).deactivate(anyInt());
-    }
+        verifyNoInteractions(logic);
 
-    @Test
-    void deactivate_alreadyInactiveBook_throwsConflictException(){
-        Book book = new Book(1, "Clean Code", "John Doe", "abc124", 20, 20, false);
-        when(bookRepo.findById(1)).thenReturn(Optional.of(book));
-
-        assertThrows(ConflictException.class, () -> bookService.deactivate(1));
-
-        verify(bookRepo, never()).deactivate(anyInt());
-    }
-
-    @Test
-    void deactivate_loanedBook_throwsConflictException(){
-        Book book = new Book(1, "Clean Code", "John Doe", "abc124", 20, 20, true);
-        Loan loan = new Loan(1, 1, 1, null, null, null, Status.ACTIVE);
-
-        when(bookRepo.findById(1)).thenReturn(Optional.of(book));
-        when(loanRepo.findByBookId(1)).thenReturn(List.of(loan));
-
-        assertThrows(ConflictException.class, () -> bookService.deactivate(1));
-
-        verify(bookRepo, never()).deactivate(anyInt());
+        verify(repo , never())
+                .save(any(Book.class));
     }
 
     @Test
     void deactivate_invalidId_throwsValidationException(){
-        assertThrows(ValidationException.class, () -> bookService.deactivate(-1));
+        assertThrows(ValidationException.class,
+                () -> service.deactivate(-1));
 
-        verify(bookRepo, never()).deactivate(anyInt());
+        verifyNoInteractions(logic);
+        verifyNoInteractions(repo);
     }
-
 }

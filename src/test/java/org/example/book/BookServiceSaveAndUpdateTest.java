@@ -5,10 +5,6 @@ import org.example.book.dto.BookUpdateRequest;
 import org.example.book.repository.BookRepository;
 import org.example.exception.ConflictException;
 import org.example.exception.NotFoundException;
-import org.example.exception.ValidationException;
-import org.example.loan.Loan;
-import org.example.loan.enums.Status;
-import org.example.loan.repository.LoanRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -16,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,101 +21,141 @@ import static org.mockito.Mockito.*;
 public class BookServiceSaveAndUpdateTest {
 
     @Mock
-    private BookRepository bookRepo;
+    BookRepository repo;
 
     @Mock
-    private LoanRepository loanRepo;
+    BookConflictLogic logic;
 
     @InjectMocks
-    private BookService bookService;
+    BookService service;
 
-
-    //       Book save method test cases
+    //      save method test cases
     @Test
     void save_validRequest_bookIsSaved(){
-        BookCreateRequest request =
-                new BookCreateRequest("Clean Code", "Robert Martin", "abc123", 10);
+        BookCreateRequest request = BookUtil.getCreateRequest();
 
-        when(bookRepo.findByIsbn("abc123")).thenReturn(Optional.empty());
+        doNothing()
+                .when(logic)
+                .isbnDuplicateCheck(request.getIsbn());
 
-        bookService.save(request);
-
+        service.save(request);
         ArgumentCaptor<Book> captor = ArgumentCaptor.forClass(Book.class);
 
-        verify(bookRepo).save(captor.capture());
+        verify(repo).save(captor.capture());
 
-        Book savedBook = captor.getValue();
+        Book book = captor.getValue();
 
         assertAll(
-                () -> assertEquals("Clean Code", savedBook.getTitle()),
-                () -> assertEquals("Robert Martin", savedBook.getAuthor()),
-                () -> assertEquals("abc123", savedBook.getIsbn()),
-                () -> assertEquals(10, savedBook.getTotalCopies())
+                () -> assertEquals(request.getTitle(), book.getTitle()),
+                () -> assertEquals(request.getAuthor(), book.getAuthor()),
+                () -> assertEquals(request.getIsbn(), book.getIsbn()),
+                () -> assertEquals(request.getTotalCopies(), book.getTotalCopies()),
+                () -> assertEquals(request.getTotalCopies(), book.getAvailableCopies()),
+                () -> assertTrue(book.isActive())
         );
     }
 
     @Test
-    void save_invalidIsbn_throwsConflictException(){
-        BookCreateRequest request = new BookCreateRequest("Clean Code", "Robert Martin", "abc123", 10);
+    void save_duplicateIsbn_throwsConflictException(){
+        BookCreateRequest request = BookUtil.getCreateRequest();
 
-        when(bookRepo.findByIsbn(anyString())).thenReturn(Optional.of(new Book()));
+        doThrow(ConflictException.class)
+                .when(logic)
+                .isbnDuplicateCheck(request.getIsbn());
 
-        assertThrows(ConflictException.class, () -> bookService.save(request));
+        assertThrows(ConflictException.class,
+                () -> service.save(request));
 
-        verify(bookRepo).findByIsbn("abc123");
-        verifyNoMoreInteractions(bookRepo);
+        verify(repo, never())
+                .save(any(Book.class));
     }
 
 
-    //      Book update method test cases
+    //      update method test cases
     @Test
     void update_validRequest_bookIsUpdated(){
-        BookUpdateRequest request = new BookUpdateRequest(1, 20, 20);
-        Book book = new Book(1, "Clean Code", "John Doe", "abc124", 20, 20, true);
+        BookUpdateRequest request = BookUtil.getUpdateRequest(true);
+        Book book = BookUtil.getBook(true);
 
-        when(bookRepo.findById(1)).thenReturn(Optional.of(book));
-        ArgumentCaptor<Book> captor = ArgumentCaptor.forClass(Book.class);
+        doNothing()
+                .when(logic)
+                .validateCopies(request.getTotalCopies(), request.getAvailableCopies());
 
-        bookService.update(request);
+        when(repo.findById(request.getId()))
+                .thenReturn(Optional.of(book));
 
-        verify(bookRepo).update(captor.capture());
+        doNothing()
+                .when(logic)
+                .isBookActiveCheck(book);
 
-        Book updatedBook = captor.getValue();
-        assertAll(
-                () -> assertEquals(request.getId(), updatedBook.getId()),
-                () -> assertEquals(request.getTotalCopies(), updatedBook.getTotalCopies()),
-                () -> assertEquals(request.getAvailableCopies(), updatedBook.getAvailableCopies())
-        );
+        service.update(request);
+
+        assertEquals(request.getTotalCopies(), book.getTotalCopies());
+        assertEquals(request.getAvailableCopies(), book.getAvailableCopies());
+
+        verify(repo).save(book);
     }
 
     @Test
-    void update_inactiveBook_throwsConflictException(){
-        Book book = new Book(1, "Clean Code", "John Doe", "abc124", 20, 20, false);
+    void update_bookIsNotActive_throwsConflictException(){
+        BookUpdateRequest request = BookUtil.getUpdateRequest(true);
+        Book book = BookUtil.getBook(false);
 
-        when(bookRepo.findById(1)).thenReturn(Optional.of(book));
+        doNothing()
+                .when(logic)
+                .validateCopies(request.getTotalCopies(), request.getAvailableCopies());
 
-        assertThrows(ConflictException.class, () -> bookService.update(new BookUpdateRequest(1, 20, 20)));
+        when(repo.findById(request.getId()))
+                .thenReturn(Optional.of(book));
 
-        verify(bookRepo, never()).update(any());
+        doThrow(ConflictException.class)
+                .when(logic).isBookActiveCheck(book);
+
+        assertThrows(ConflictException.class,
+                () -> service.update(request));
+
+        verify(repo, never())
+                .save(any(Book.class));
     }
 
     @Test
     void update_bookDoesNotExist_throwsNotFoundException(){
-        BookUpdateRequest request = new BookUpdateRequest(1, 20, 20);
+        BookUpdateRequest request = BookUtil.getUpdateRequest(true);
 
-        when(bookRepo.findById(1)).thenReturn(Optional.empty());
+        doNothing()
+                .when(logic)
+                .validateCopies(request.getTotalCopies(), request.getAvailableCopies());
 
-        assertThrows(NotFoundException.class, () -> bookService.update(request));
+        when(repo.findById(request.getId()))
+                .thenReturn(Optional.empty());
 
-        verify(bookRepo, never()).update(any());
+        assertThrows(NotFoundException.class,
+                () -> service.update(request));
+
+        verify(logic, never())
+                .isBookActiveCheck(any(Book.class));
+
+        verify(repo, never())
+                .save(any(Book.class));
     }
 
     @Test
-    void update_invalidInput_throwsValidationException(){
-        BookUpdateRequest request = new BookUpdateRequest(1, -1, 22);
+    void update_invalidCopies_throwsConflictException(){
+        BookUpdateRequest request = BookUtil.getUpdateRequest(false);
+        doThrow(ConflictException.class)
+                .when(logic)
+                .validateCopies(request.getTotalCopies(), request.getAvailableCopies());
 
-        assertThrows(ValidationException.class, () -> bookService.update(request));
+        assertThrows(ConflictException.class,
+                () -> service.update(request));
 
-        verify(bookRepo, never()).update(any());
+        verify(repo, never())
+                .findById(request.getId());
+
+        verify(logic, never())
+                .isBookActiveCheck(any(Book.class));
+
+        verify(repo, never())
+                .save(any(Book.class));
     }
 }

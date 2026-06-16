@@ -22,17 +22,17 @@ public class BookService {
     private static final Logger log = LoggerFactory.getLogger(BookService.class);
 
     private final BookRepository repo;
-    private final LoanRepository loanRepo;
+    private final BookConflictLogic logic;
 
-    public BookService(BookRepository repo, LoanRepository loanRepo) {
+    public BookService(BookRepository repo, BookConflictLogic logic) {
         this.repo = repo;
-        this.loanRepo = loanRepo;
+        this.logic = logic;
     }
 
     public void save(BookCreateRequest request) {
         log.info("Adding new book - isbn: {}", request.getIsbn());
 
-        isbnDuplicateCheck(request.getIsbn());
+        logic.isbnDuplicateCheck(request.getIsbn());
 
         repo.save(BookParser.toBookFromCreateRequest(request));
         log.info("Added new book successfully - isbn: {}", request.getIsbn());
@@ -41,30 +41,26 @@ public class BookService {
     public BookResponse findById(int id){
         Validator.validateInt(id, "Id");
 
-        Book book = repo.findById(id)
-                .orElseThrow(() -> new NotFoundException("Book not found with id " + id));
+        Book book = getBookIfExist(id);
 
         return BookParser.toBookResponse(book);
     }
 
     public List<BookResponse> findAll(){
-        List<Book> books = repo.findAll();
-        if(books.isEmpty()){
-            throw new NotFoundException("No books found");
-        }
+        List<Book> books = repo.findByIsActive(true);
+
+        isEmptyCheck(books, "");
 
         return books.stream()
                 .map(BookParser::toBookResponse)
                 .toList();
-
     }
 
     public List<BookResponse> findByTitle(String title){
         Validator.validateStr(title, "Title");
-        List<Book>  books = repo.findByTitle(title);
-        if(books.isEmpty()){
-            throw new NotFoundException("No books found by title " + title);
-        }
+        List<Book>  books = repo.findByTitleContainingIgnoreCase(title);
+
+        isEmptyCheck(books, "with title " + title);
 
         return books.stream()
                 .map(BookParser::toBookResponse)
@@ -73,27 +69,37 @@ public class BookService {
 
     public List<BookResponse> findByAuthor(String author){
         Validator.validateStr(author, "Author");
-        List<Book> books = repo.findByAuthor(author);
-        if(books.isEmpty()){
-            throw new NotFoundException("No books found by author " + author);
-        }
+        List<Book> books = repo.findByAuthorContainingIgnoreCase(author);
+
+        isEmptyCheck(books, "with author " + author);
 
         return books.stream()
                 .map(BookParser::toBookResponse)
                 .toList();
     }
 
+    public List<BookResponse> findAllInactive(){
+        List<Book> books = repo.findByIsActive(false);
+
+        isEmptyCheck(books, "with status inactive");
+
+        return  books.stream()
+                .map(BookParser::toBookResponse)
+                .toList();
+    }
+
+
     public void update(BookUpdateRequest book){
         log.info("updating book - id: {}", book.getId());
-        validateCopies(book.getTotalCopies(), book.getAvailableCopies());
+        logic.validateCopies(book.getTotalCopies(), book.getAvailableCopies());
 
         Book book1 = getBookIfExist(book.getId());
-        isBookActiveCheck(book1);
+        logic.isBookActiveCheck(book1);
 
         book1.setTotalCopies(book.getTotalCopies());
         book1.setAvailableCopies(book.getAvailableCopies());
 
-        repo.update(book1);
+        repo.save(book1);
         log.info("updated book successfully - id: {}", book.getId());
     }
 
@@ -102,10 +108,11 @@ public class BookService {
         Validator.validateInt(id, "Id");
 
         Book book = getBookIfExist(id);
-        isBookActiveCheck(book);
-        isBookLoanedCheck(id);
+        logic.isBookActiveCheck(book);
+        logic.isBookLoanedCheck(id);
 
-        repo.deactivate(id);
+        book.setActive(false);
+        repo.save(book);
         log.info("deactivated book successfully - id: {}", id);
     }
 
@@ -114,58 +121,13 @@ public class BookService {
         Validator.validateInt(id, "Id");
 
         Book book = getBookIfExist(id);
-        isBookNotActiveCheck(book);
+        logic.isBookNotActiveCheck(book);
 
-        repo.activate(id);
+        book.setActive(true);
+        repo.save(book);
         log.info("activated book successfully - id: {}", id);
     }
 
-    public List<BookResponse> findAllInactive(){
-        List<Book> books = repo.findAllInactive();
-        if(books.isEmpty()){
-            throw new NotFoundException("No Inactive books found");
-        }
-
-        return  books.stream()
-                .map(BookParser::toBookResponse)
-                .toList();
-    }
-
-
-
-
-    private void isbnDuplicateCheck(String isbn){
-        if(repo.findByIsbn(isbn).isPresent()){
-            log.warn("Book with ISBN {} already exists", isbn);
-            throw new ConflictException("Book with ISBN " + isbn + " already exists");
-        }
-    }
-
-    private void isBookLoanedCheck(int bookId) {
-        boolean isBorrowed = loanRepo.findByBookId(bookId)
-                .stream()
-                .anyMatch(loan -> loan.getStatus().equals(Status.ACTIVE) ||
-                        loan.getStatus().equals(Status.OVERDUE));
-
-        if (isBorrowed) {
-            log.warn("Book is already loaned - id: {}", bookId);
-            throw new ConflictException("Book with ID " + bookId + " is loaned");
-        }
-    }
-
-    private void isBookActiveCheck(Book book) {
-        if(!book.isActive()){
-            log.warn("Book is not active - id: {}", book.getId());
-            throw new ConflictException("Book is not active");
-        }
-    }
-
-    private void isBookNotActiveCheck(Book book){
-        if(book.isActive()){
-            log.warn("Book is active already - id: {}", book.getId());
-            throw new ConflictException("Book is active already");
-        }
-    }
 
     private Book getBookIfExist(int id){
         return repo.findById(id)
@@ -175,9 +137,9 @@ public class BookService {
                 });
     }
 
-    private static void validateCopies(int totalCopies, int availableCopies){
-        if(totalCopies < availableCopies){
-            throw new ValidationException("Total Copies can't be less than Available Copies");
+    private <T> void isEmptyCheck(List<T> items, String field){
+        if(items.isEmpty()){
+            throw new NotFoundException("No Books found " + field);
         }
     }
 }

@@ -45,4 +45,46 @@ public class ValidatorTest {
         assertThrows(ValidationException.class, () -> Validator.validateInt(-1, "Field"));
     }
 
+
+    //       validateEmail method test cases
+    @Test
+    void validateEmail_validEmail_noExceptionThrown() {
+        assertDoesNotThrow(() -> Validator.validateEmail("john@mail.com"));
+    }
+
+    @Test
+    void validateEmail_noAtSign_throwsValidationException() {
+        assertThrows(ValidationException.class,
+                () -> Validator.validateEmail("johnmail.com"));
+    }
+
+    @Test
+    void validateEmail_atSignAtStart_throwsValidationException() {
+        assertThrows(ValidationException.class,
+                () -> Validator.validateEmail("@mail.com"));
+    }
+
+    @Test
+    void validateEmail_nothingAfterAt_throwsValidationException() {
+        assertThrows(ValidationException.class,
+                () -> Validator.validateEmail("john@"));
+    }
+
+    @Test
+    void validateEmail_noDotInDomain_throwsValidationException() {
+        assertThrows(ValidationException.class,
+                () -> Validator.validateEmail("john@mailcom"));
+    }
+
+    @Test
+    void validateEmail_domainStartsWithDot_throwsValidationException() {
+        assertThrows(ValidationException.class,
+                () -> Validator.validateEmail("john@.mail.com"));
+    }
+
+    @Test
+    void validateEmail_domainEndsWithDot_throwsValidationException() {
+        assertThrows(ValidationException.class,
+                () -> Validator.validateEmail("john@mail."));
+    }
 }

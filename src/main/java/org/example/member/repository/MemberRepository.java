@@ -1,27 +1,16 @@
 package org.example.member.repository;
 
 import org.example.member.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository {
-
-    void save(Member member);
-
-    Optional<Member> findById(int id);
-
-    List<Member> findByName(String name);
-
-    List<Member> findAll();
+public interface MemberRepository extends JpaRepository<Member, Integer> {
 
     Optional<Member> findByEmail(String email);
 
-    void update(Member member);
+    List<Member> findByNameContainingIgnoreCase(String name);
 
-    void deactivate(int id);
-
-    void activate(int id);
-
-    List<Member> findInactiveMembers();
+    List<Member> findByIsActive(boolean isActive);
 }

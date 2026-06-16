@@ -1,10 +1,6 @@
 package org.example.member;
 
-import org.example.exception.ConflictException;
 import org.example.exception.NotFoundException;
-import org.example.exception.ValidationException;
-import org.example.loan.enums.Status;
-import org.example.loan.repository.LoanRepository;
 import org.example.member.dto.MemberCreateRequest;
 import org.example.member.dto.MemberResponse;
 import org.example.member.dto.MemberUpdateRequest;
@@ -24,17 +20,18 @@ public class MemberService {
     private final static Logger log = LoggerFactory.getLogger(MemberService.class);
 
     private final MemberRepository repo;
-    private final LoanRepository loanRepo;
+    private final MemberConflictLogic logic;
 
-    public MemberService(MemberRepository memberRepository, LoanRepository loanRepo) {
+    public MemberService(MemberRepository memberRepository, MemberConflictLogic logic) {
         this.repo = memberRepository;
-        this.loanRepo = loanRepo;
+        this.logic = logic;
     }
 
     public void addMember(MemberCreateRequest member){
         log.info("Adding new member - email: {}", member.getEmail());
-        validateEmail(member.getEmail());
-        emailDuplicateCheck(member.getEmail());
+        Validator.validateEmail(member.getEmail());
+
+        logic.emailDuplicateCheck(member.getEmail());
 
         repo.save(toMemberFromCreateRequest(member));
         log.info("Member successfully added - email: {}", member.getEmail());
@@ -48,11 +45,9 @@ public class MemberService {
 
     public List<MemberResponse> findByName(String name){
         Validator.validateStr(name, "Name");
-        List<Member> members = repo.findByName(name);
+        List<Member> members = repo.findByNameContainingIgnoreCase(name);
 
-        if(members.isEmpty()){
-            throw new NotFoundException("Member not found with name: " + name);
-        }
+        isEmptyCheck(members, "Name " + name);
 
         return members.stream()
                 .map(MemberParser::toResponseFromMember)
@@ -60,8 +55,8 @@ public class MemberService {
     }
 
     public MemberResponse findByEmail(String email){
-        Validator.validateStr(email, "Email");
-        validateEmail(email);
+        Validator.validateStr(email, "Email " + email);
+        Validator.validateEmail(email);
 
         Member member = repo.findByEmail(email)
                 .orElseThrow(() ->
@@ -70,11 +65,20 @@ public class MemberService {
         return toResponseFromMember(member);
     }
 
+    public List<MemberResponse> findAllInactive(){
+        List<Member> members = repo.findByIsActive(false);
+
+        isEmptyCheck(members, "With Status Inactive");
+
+        return members.stream()
+                .map(MemberParser::toResponseFromMember)
+                .toList();
+    }
+
     public List<MemberResponse> findAll(){
-        List<Member> members = repo.findAll();
-        if(members.isEmpty()){
-            throw new NotFoundException("No Members Found");
-        }
+        List<Member> members = repo.findByIsActive(true);
+
+        isEmptyCheck(members, "");
 
         return members.stream()
                 .map(MemberParser::toResponseFromMember)
@@ -83,15 +87,15 @@ public class MemberService {
 
     public void update(MemberUpdateRequest member){
         log.info("Updating member - memberId: {}", member.getId());
-        validateEmail(member.getEmail());
+        Validator.validateEmail(member.getEmail());
 
         Member updateMember = getMemberIfExist(member.getId());
-        emailDuplicateCheck(member.getEmail());
+        logic.emailDuplicateCheck(member.getEmail());
 
         updateMember.setName(member.getName());
         updateMember.setEmail(member.getEmail());
 
-        repo.update(updateMember);
+        repo.save(updateMember);
         log.info("Member updated successfully - memberId: {}", member.getId());
     }
 
@@ -101,10 +105,11 @@ public class MemberService {
 
         Member member = getMemberIfExist(id);
 
-        isMemberActiveCheck(member);
-        isMemberLoanedCheck(id);
+        logic.isMemberActiveCheck(member);
+        logic.isMemberLoanedCheck(id);
 
-        repo.deactivate(id);
+        member.setActive(false);
+        repo.save(member);
         log.info("Member deactivated successfully - memberId: {}", id);
     }
 
@@ -113,56 +118,14 @@ public class MemberService {
         Validator.validateInt(id, "Id");
 
         Member member = getMemberIfExist(id);
-        isMemberNotActiveCheck(member);
+        logic.isMemberNotActiveCheck(member);
 
-        repo.activate(id);
+        member.setActive(true);
+        repo.save(member);
         log.info("Member activated successfully - memberId: {}", id);
     }
 
-    public List<MemberResponse> findAllInactive(){
-        List<Member> members = repo.findInactiveMembers();
-        if(members.isEmpty()){
-            throw new NotFoundException("Inactive Members not found");
-        }
 
-        return members.stream()
-                .map(MemberParser::toResponseFromMember)
-                .toList();
-    }
-
-
-
-    private void emailDuplicateCheck(String email){
-        if(repo.findByEmail(email).isPresent()){
-            log.warn("Email already exists - email: {}", email);
-            throw new ConflictException("Email already exists");
-        }
-    }
-
-    private void isMemberLoanedCheck(int id){
-        boolean isLoaned = loanRepo.findByMemberId(id)
-                .stream()
-                .anyMatch(loan -> loan.getStatus().equals(Status.ACTIVE) ||
-                        loan.getStatus().equals(Status.OVERDUE));
-        if(isLoaned){
-            log.warn("Member has active loan - memberId: {}", id);
-            throw new ConflictException("The member with id "+ id + " has active loan");
-        }
-    }
-
-    private void isMemberActiveCheck(Member member){
-        if(!member.isActive()){
-            log.warn("Member is not active already - memberId: {}", member.getId());
-            throw new ConflictException("Member is already inactive");
-        }
-    }
-
-    private void isMemberNotActiveCheck(Member member){
-        if(member.isActive()){
-            log.warn("Member is active already - memberId: {}", member.getId());
-            throw new ConflictException("Member is already activated");
-        }
-    }
 
     private Member getMemberIfExist(int id){
         return repo.findById(id)
@@ -172,17 +135,9 @@ public class MemberService {
                 });
     }
 
-    private static void validateEmail(String value) {
-        int atIndex = value.indexOf("@");
-
-        if (atIndex <= 0 || atIndex == value.length() - 1) {
-            throw new ValidationException("Email must have content before and after @.");
-        }
-
-        String domain = value.substring(atIndex + 1);
-
-        if (!domain.contains(".") || domain.startsWith(".") || domain.endsWith(".")) {
-            throw new ValidationException("Email domain must be valid gmail.com");
+    private <T> void isEmptyCheck(List<T> items, String fieldName){
+        if(items.isEmpty()){
+            throw new NotFoundException("Members not found: " + fieldName);
         }
     }
 }
