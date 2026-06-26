@@ -1,87 +1,28 @@
-17:01:50 INFO  org.example.member.MemberService - Activating member - memberId: 1
-17:01:50 INFO  org.example.member.MemberService - Member activated successfully - memberId: 1
-17:04:17 INFO  org.example.member.MemberService - Activating member - memberId: 1
-17:04:34 INFO  org.example.member.MemberService - Activating member - memberId: 1
-17:08:54 INFO  org.example.member.MemberService - Activating member - memberId: 1
-17:09:47 INFO  org.example.member.MemberService - Activating member - memberId: -1
-17:12:34 INFO  org.example.member.MemberService - Deactivating member - memberId: 1
-17:12:34 INFO  org.example.member.MemberService - Member deactivated successfully - memberId: 1
-17:20:00 INFO  org.example.member.MemberService - Deactivating member - memberId: 1
-17:20:04 INFO  org.example.member.MemberService - Deactivating member - memberId: 1
-17:21:13 INFO  org.example.member.MemberService - Deactivating member - memberId: 1
-17:22:24 INFO  org.example.member.MemberService - Deactivating member - memberId: -1
-17:36:27 INFO  org.example.member.MemberService - Adding new member - email: john@mail.ru
-17:36:27 INFO  org.example.member.MemberService - Member successfully added - email: john@mail.ru
-17:38:11 INFO  org.example.member.MemberService - Adding new member - email: john@mail.ru
-17:39:39 INFO  org.example.member.MemberService - Adding new member - email: john.ru
-17:45:01 INFO  org.example.member.MemberService - Updating member - memberId: 1
-17:45:01 INFO  org.example.member.MemberService - Member updated successfully - memberId: 1
-17:50:21 INFO  org.example.member.MemberService - Updating member - memberId: 1
-17:51:33 INFO  org.example.member.MemberService - Updating member - memberId: 1
-17:51:33 WARN  org.example.member.MemberService - Member not found - memberId: 1
-17:52:28 INFO  org.example.member.MemberService - Updating member - memberId: 1
-17:52:42 INFO  org.example.member.MemberService - Updating member - memberId: 1
-17:52:42 INFO  org.example.member.MemberService - Adding new member - email: john@mail.ru
-17:52:42 INFO  org.example.member.MemberService - Member successfully added - email: john@mail.ru
-17:52:42 INFO  org.example.member.MemberService - Updating member - memberId: 1
-17:52:42 INFO  org.example.member.MemberService - Member updated successfully - memberId: 1
-17:52:42 INFO  org.example.member.MemberService - Updating member - memberId: 1
-17:52:42 WARN  org.example.member.MemberService - Member not found - memberId: 1
-17:52:42 INFO  org.example.member.MemberService - Adding new member - email: john.ru
-17:52:42 INFO  org.example.member.MemberService - Adding new member - email: john@mail.ru
-17:52:42 INFO  org.example.member.MemberService - Updating member - memberId: 1
-17:58:12 WARN  o.example.member.MemberConflictLogic - Email already exists - email: email
-18:03:05 WARN  o.example.member.MemberConflictLogic - Member has active loan - memberId: 1
-18:11:10 WARN  o.example.member.MemberConflictLogic - Member is not active already - memberId: 1
-18:12:28 WARN  o.example.member.MemberConflictLogic - Member is active already - memberId: 1
-18:14:36 WARN  o.example.member.MemberConflictLogic - Member is not active already - memberId: 1
-18:14:36 WARN  o.example.member.MemberConflictLogic - Member is active already - memberId: 1
-18:14:36 WARN  o.example.member.MemberConflictLogic - Member has active loan - memberId: 1
-18:14:36 WARN  o.example.member.MemberConflictLogic - Email already exists - email: email
-19:07:02 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
-19:07:02 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
-19:07:15 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
-19:07:15 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
-19:09:19 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
-19:09:19 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
-19:10:17 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
-19:10:17 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
-19:13:40 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
-19:13:40 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
-19:14:55 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
-19:14:55 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
-19:17:40 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
-19:19:23 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
-19:19:23 WARN  org.example.loan.LoanService - Member not found with id: 1
-19:19:35 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
-19:19:35 WARN  org.example.loan.LoanService - Member not found with id: 1
-19:20:25 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
-19:20:25 WARN  org.example.loan.LoanService - Book not found with id 1
-19:29:44 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
-19:29:44 INFO  org.example.loan.LoanService - Returned loan successfully - loanId: 1
-19:31:46 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
-19:33:27 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
-19:33:27 WARN  org.example.loan.LoanService - Loan not found with loanId: 1
-19:34:53 INFO  org.example.loan.LoanService - Returning loan - loanId: -1
-19:35:54 INFO  org.example.loan.LoanService - Returning loan - loanId: -1
-19:35:54 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
-19:35:54 INFO  org.example.loan.LoanService - Returned loan successfully - loanId: 1
-19:35:54 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
-19:35:54 INFO  org.example.loan.LoanService - Loan created successfully - bookId: 1, memberId: 1
-19:35:54 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
-19:35:54 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
-19:35:54 WARN  org.example.loan.LoanService - Loan not found with loanId: 1
-19:35:54 INFO  org.example.loan.LoanService - Returning loan - loanId: 1
-19:35:54 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
-19:35:54 WARN  org.example.loan.LoanService - Book not found with id 1
-19:35:54 INFO  org.example.loan.LoanService - Creating loan - memberId: 1, bookId: 1
-19:35:54 WARN  org.example.loan.LoanService - Member not found with id: 1
-20:04:14 WARN  org.example.loan.LoanConflictLogic - Member has already borrowed same book - memberId: 1, bookId: 1
-20:07:08 WARN  org.example.loan.LoanConflictLogic - Book has no available copies - bookId: 1
-20:07:32 WARN  org.example.loan.LoanConflictLogic - Book has no available copies - bookId: 1
-20:07:52 WARN  org.example.loan.LoanConflictLogic - Book has no available copies - bookId: 1
-20:07:52 WARN  org.example.loan.LoanConflictLogic - Book has no available copies - bookId: 1
-20:09:36 WARN  org.example.loan.LoanConflictLogic - Member is not active - memberId: 1
-20:12:05 WARN  org.example.loan.LoanConflictLogic - Book is not active - bookId: 1
-20:16:45 WARN  org.example.loan.LoanConflictLogic - Member has overdue already - memberId: 1
-20:19:53 WARN  org.example.loan.LoanConflictLogic - Loan has already been returned - loanId: 1
+11:50:37 INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+11:50:37 INFO  org.example.Main - Starting Main using Java 17.0.16 with PID 38873 (/Users/shokhrukhernazarov/Projects/library-management-system/target/classes started by shokhrukhernazarov in /Users/shokhrukhernazarov/Projects/library-management-system)
+11:50:37 INFO  org.example.Main - No active profile set, falling back to 1 default profile: "default"
+11:50:38 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+11:50:38 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+11:50:38 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+11:50:38 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+11:50:38 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:50:38 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@59d0cdb6
+11:50:38 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+11:50:38 INFO  o.f.c.i.license.VersionPrinter - Flyway Community Edition 9.22.3 by Redgate
+11:50:38 INFO  o.f.c.i.license.VersionPrinter - See release notes here: https://rd.gt/416ObMi
+11:50:38 INFO  o.f.c.i.license.VersionPrinter - 
+11:50:38 INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5433/librarydb (PostgreSQL 16.13)
+11:50:38 WARN  o.f.c.i.database.base.Database - Flyway upgrade recommended: PostgreSQL 16.13 is newer than this version of Flyway and support has not been tested. The latest supported version of PostgreSQL is 15.
+11:50:38 INFO  o.f.core.internal.command.DbValidate - Successfully validated 4 migrations (execution time 00:00.008s)
+11:50:38 INFO  o.f.core.internal.command.DbMigrate - Current version of schema "public": 4
+11:50:38 WARN  o.f.core.internal.command.DbMigrate - Schema "public" has a version (4) that is newer than the latest available migration (2) !
+11:50:38 INFO  o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+11:50:38 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+11:50:38 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.4.Final
+11:50:38 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+11:50:38 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+11:50:38 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+11:50:38 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+11:50:38 INFO  org.example.Main - Started Main in 1.53 seconds (process running for 1.754)
+11:57:18 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+11:57:18 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
