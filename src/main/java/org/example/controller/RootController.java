@@ -10,7 +10,7 @@ public class RootController {
 
     @GetMapping("/")
     public ResponseEntity<Void> root() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(HttpStatus.FOUND)
                 .header("Location", "/swagger-ui/index.html")
                 .build();
     }
