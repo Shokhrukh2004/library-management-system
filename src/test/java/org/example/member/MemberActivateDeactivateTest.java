@@ -1,6 +1,7 @@
 package org.example.member;
 
 import org.example.exception.ConflictException;
+import org.example.exception.NotFoundException;
 import org.example.exception.ValidationException;
 import org.example.member.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
@@ -66,7 +67,7 @@ public class MemberActivateDeactivateTest {
         when(repo.findById(1))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ConflictException.class,
+        assertThrows(NotFoundException.class,
                 () -> service.activate(1));
 
         verifyNoInteractions(logic);
@@ -148,7 +149,7 @@ public class MemberActivateDeactivateTest {
         when(repo.findById(1))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ConflictException.class,
+        assertThrows(NotFoundException.class,
                 () -> service.deactivate(1));
 
         verifyNoInteractions(logic);
