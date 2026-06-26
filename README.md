@@ -153,6 +153,8 @@ Controller → Service → Repository → Database
 - **Global Exception Handler** — maps all exceptions to consistent JSON error responses
 - **Flyway** — owns the schema, Hibernate only validates
 
+![Architecture Diagram](assets/architecture.png)
+
 ---
 
 ## Testing
