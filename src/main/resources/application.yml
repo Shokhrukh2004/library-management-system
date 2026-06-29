@@ -17,10 +17,10 @@ spring:
 springdoc:
   api-docs:
     path: /v3/api-docs
+    servers:
+      - url: https://library-management-system-production-b765.up.railway.app
+        description: Production
+      - url: http://localhost:8080
+        description: Local Development
   swagger-ui:
     url: https://library-management-system-production-b765.up.railway.app/v3/api-docs
-  servers:
-    - url: https://library-management-system-production-b765.up.railway.app
-      description: Production
-    - url: http://localhost:8080
-      description: Local Development
