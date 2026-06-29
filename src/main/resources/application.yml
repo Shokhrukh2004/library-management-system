@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: LibrarySystem
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 600000
+      max-lifetime: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    url: https://library-management-system-production-b765.up.railway.app/v3/api-docs
+  servers:
+    - url: https://library-management-system-production-b765.up.railway.app
+      description: Production
+    - url: http://localhost:8080
+      description: Local Development
